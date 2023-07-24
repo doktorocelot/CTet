@@ -3,18 +3,20 @@ cmake_minimum_required(VERSION 3.25)
 option(OCELOT_CONTROLS OFF)
 if (OCELOT_CONTROLS)
     add_compile_definitions(OCELOT_CONTROLS)
-endif()
+endif ()
 
 project(CTet C)
 set(CMAKE_C_STANDARD 11)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-find_package(SDL2 REQUIRED)
-include_directories(CTet ${SDL2_INCLUDE_DIRS})
+set(BUILD_SHARED_LIBS ON)
+set(__WIN32__ ON)
+if (WIN32)
+    add_definitions(-D__WIN32__)
+endif ()
+add_subdirectory(extern/SDL)
 
-
-file(COPY extern/SDL2.dll DESTINATION ${CMAKE_BINARY_DIR}/bin)
 
 set(SOURCES
         src/main.c
@@ -36,6 +38,11 @@ set(SOURCES
         src/game/engine/component/autoshift.h src/game/engine/component/autoshift.c
         )
 
-add_executable(CTet WIN32 ${SOURCES})
-target_link_libraries(CTet ${SDL2_LIBRARIES})
+if (WIN32)
+    add_executable(CTet WIN32 ${SOURCES})
+else ()
+    add_executable(CTet ${SOURCES})
+endif ()
 
+target_include_directories(CTet PUBLIC lib/SDL-release-2.28.1/include)
+target_link_libraries(CTet PUBLIC SDL2)

@@ -1,9 +1,20 @@
-#include <SDL.h>
+#define SDL_MAIN_HANDLED
+
 #include "game/game.h"
 
-int main(int argc, char *argv[]) {
+#ifdef __WIN32__
 
-    Game* game = game_create();
+#include "windows.h"
+
+#endif
+
+#ifdef __WIN32__
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
+#else
+int main(int argc, char *argv[]) {
+#endif
+
+    Game *game = game_create();
     game_run(game);
     game_destroy(game);
 
