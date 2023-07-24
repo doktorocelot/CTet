@@ -49,6 +49,10 @@ void engine_tick(Engine *engine, float deltaTime) {
         }
     }
 
+    int hitList[FIELD_HEIGHT + 1];
+    field_getFullRowHitList(&engine->field, hitList);
+    field_killHitList(&engine->field, hitList);
+    field_collapseHitList(&engine->field, hitList);
 }
 
 Piece *engine_getActivePiece(Engine *engine) {

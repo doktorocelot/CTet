@@ -1,3 +1,4 @@
+#include <memory.h>
 #include "field.h"
 
 static Block field_getBlockAt(Field *field, Point coords);
@@ -28,6 +29,49 @@ void field_setBlockAt(Field *field, Block block, Point coords) {
     field->matrix[coords.y][coords.x] = block;
 }
 
+
 Block field_getBlockAt(Field *field, Point coords) {
     return field->matrix[coords.y][coords.x];
 }
+
+void field_getFullRowHitList(Field *field, int *hitList) {
+    int hitListIndex = 0;
+    for (int y = FIELD_HEIGHT - 1; y >= 0; y--) {
+        for (int x = 0; x <= FIELD_WIDTH; x++) {
+            if (x == FIELD_WIDTH) {
+                hitList[hitListIndex] = y;
+                hitListIndex++;
+                break;
+            }
+            if (field_getBlockAt(field, (Point) {x, y}).color <= BlockColor_NONE) break;
+        }
+    }
+    hitList[hitListIndex] = 0xFF;
+}
+
+static void field_killRow(Field *field, int row);
+
+void field_killHitList(Field *field, const int *hitList) {
+    for (int i = 0; hitList[i] != 0xFF && i <= FIELD_HEIGHT; i++) {
+        field_killRow(field, hitList[i]);
+    }
+}
+
+void field_collapseHitList(Field *field, const int *hitList) {
+    for (int i = 0; hitList[i] != 0xFF && i <= FIELD_HEIGHT; i++) {
+        for (int y = hitList[i]; y < FIELD_HEIGHT -1; y++) {
+            memcpy(&field->matrix[y][0], &field->matrix[y + 1][0], sizeof(Block) * FIELD_WIDTH);
+        }
+        // Don't forget to clear the top row, so we don't get duplicates!
+        // ...but of course, nobody would forget such a basic thing, right?
+        field_killRow(field, FIELD_HEIGHT - 1);
+    }
+}
+
+void field_killRow(Field *field, int row) {
+    Block *matrixPtr = (Block *) field->matrix[row];
+    for (int i = 0; i < FIELD_WIDTH; i++) {
+        *matrixPtr = (Block) {.color = BlockColor_NONE};
+        matrixPtr++;
+    }
+};

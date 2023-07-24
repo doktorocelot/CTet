@@ -21,3 +21,9 @@ void field_clear(Field *field);
 CoordType field_coordTypeAt(Field *field, Point coords);
 
 void field_setBlockAt(Field *field, Block block, Point coords);
+
+void field_getFullRowHitList(Field *field, int *hitList);
+
+void field_killHitList(Field *field, const int *hitList);
+
+void field_collapseHitList(Field *field, const int *hitList);
