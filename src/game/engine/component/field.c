@@ -58,12 +58,13 @@ void field_killHitList(Field *field, const int *hitList) {
 }
 
 void field_collapseHitList(Field *field, const int *hitList) {
-    for (int i = 0; hitList[i] != 0xFF && i <= FIELD_HEIGHT; i++) {
-        for (int y = hitList[i]; y < FIELD_HEIGHT -1; y++) {
-            memcpy(&field->matrix[y][0], &field->matrix[y + 1][0], sizeof(Block) * FIELD_WIDTH);
-        }
-        // Don't forget to clear the top row, so we don't get duplicates!
-        // ...but of course, nobody would forget such a basic thing, right?
+    int rowToKill;
+    for (int i = 0; rowToKill = hitList[i], rowToKill != 0xFF && i <= FIELD_HEIGHT; i++) {
+        memmove(
+                &field->matrix[rowToKill][0],
+                &field->matrix[rowToKill + 1][0],
+                FIELD_WIDTH * (FIELD_HEIGHT - rowToKill) * sizeof(Block)
+        );
         field_killRow(field, FIELD_HEIGHT - 1);
     }
 }
