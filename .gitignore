@@ -2,7 +2,10 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,jetbrains+all,visualstudio,visualstudiocode
 
 #all builds
-*build*/
+/*build*/
+
+#vs
+/CMakeSettings.json
 
 ### C ###
 # Prerequisites
