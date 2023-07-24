@@ -65,6 +65,8 @@ void field_collapseHitList(Field *field, const int *hitList) {
                 field->matrix[rowToKill + 1],
                 FIELD_WIDTH * (FIELD_HEIGHT - rowToKill) * sizeof(Block)
         );
+        // Don't forget to clear the top row, so we don't get duplicates!
+        // ...but of course, nobody would forget such a basic thing, right?
         field_killRow(field, FIELD_HEIGHT - 1);
     }
 }
