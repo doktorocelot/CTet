@@ -7,6 +7,7 @@
 
 // Arranged alphabetically
 typedef enum {
+    PieceType_None = -1,
     PieceType_I,
     PieceType_J,
     PieceType_L,
@@ -36,6 +37,9 @@ typedef struct { // Do not modify the struct directly
 } Piece;
 
 Piece piece_buildFromType(PieceType type);
+
 void piece_rotate(Piece *piece, int amount);
+
 Orientation piece_getNewOrientation(const Piece *piece, int amount);
-Point *piece_getCoordsForOrientation(Piece* piece, Orientation orientation);
+
+Point *piece_getCoordsForOrientation(Piece *piece, Orientation orientation);

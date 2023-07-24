@@ -73,4 +73,4 @@ void field_collapseHitList(Field *field, const int *hitList) {
 
 void field_killRow(Field *field, int row) {
     memset(field->matrix[row], 0, FIELD_WIDTH * sizeof(Block));
-};
+}
