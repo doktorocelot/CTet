@@ -2,10 +2,12 @@
 #include "engine.h"
 #include "component/active-piece.h"
 #include "../../math/prng.h"
+#include "component/autoshift.h"
 
 struct Engine {
     ActivePiece active;
     Field field;
+    AutoshiftVars autoshiftVars;
     uint64_t nextSeed;
 };
 
@@ -16,6 +18,7 @@ Engine *engine_create() {
     activePiece_newPieceFromType(&engine->active, PieceType_T);
     engine->active.field = &engine->field;
     field_clear(&engine->field);
+    engine->autoshiftVars = (AutoshiftVars) {0};
 
     return engine;
 }
@@ -26,6 +29,11 @@ void engine_destroy(Engine *engine) {
 
 void engine_tick(Engine *engine, float deltaTime) {
 
+    int autoshiftResult = autoshift_tick(&engine->autoshiftVars, deltaTime);
+    while (autoshiftResult) {
+        activePiece_shift(&engine->active, autoshiftResult);
+        autoshiftResult = autoshift_tick(&engine->autoshiftVars, deltaTime);
+    };
 }
 
 Piece *engine_getActivePiece(Engine *engine) {
@@ -42,15 +50,21 @@ Block *engine_getFieldMatrix(Engine *engine) {
 
 void engine_onShiftRightDown(Engine *engine) {
     activePiece_shift(&engine->active, ShiftDirection_RIGHT);
+    autoshift_onPress(&engine->autoshiftVars, ShiftDirection_RIGHT);
 }
 
-void engine_onShiftRightUp(Engine *engine) {}
+void engine_onShiftRightUp(Engine *engine) {
+    autoshift_onRelease(&engine->autoshiftVars, ShiftDirection_RIGHT);
+}
 
 void engine_onShiftLeftDown(Engine *engine) {
     activePiece_shift(&engine->active, ShiftDirection_LEFT);
+    autoshift_onPress(&engine->autoshiftVars, ShiftDirection_LEFT);
 }
 
-void engine_onShiftLeftUp(Engine *engine) {}
+void engine_onShiftLeftUp(Engine *engine) {
+    autoshift_onRelease(&engine->autoshiftVars, ShiftDirection_LEFT);
+}
 
 void engine_onHardDrop(Engine *engine) {
     activePiece_slamToFloor(&engine->active);

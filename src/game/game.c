@@ -114,7 +114,7 @@ void game_run(Game *game) {
 #endif
                         engine_onRotateRight(game->engine);
                 }
-            } else if (event.type == SDL_KEYUP) {
+            } else if (event.type == SDL_KEYUP && event.key.repeat == 0) {
                 switch (event.key.keysym.sym) {
                     case SDLK_RIGHT:
                         engine_onShiftRightUp(game->engine);

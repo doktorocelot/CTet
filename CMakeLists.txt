@@ -33,6 +33,7 @@ set(SOURCES
         src/game/engine/component/piece.h src/game/engine/component/piece.c
         src/game/engine/component/active-piece.h src/game/engine/component/active-piece.c
         src/game/engine/component/field.h src/game/engine/component/field.c
+        src/game/engine/component/autoshift.h src/game/engine/component/autoshift.c
         )
 
 add_executable(CTet WIN32 ${SOURCES})
