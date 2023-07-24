@@ -40,6 +40,7 @@ set(SOURCES
         src/game/engine/component/next-queue.h src/game/engine/component/next-queue.c
         src/game/engine/component/hold-queue.h src/game/engine/component/hold-queue.c
         src/game/engine/component/lockdown.h src/game/engine/component/lockdown.c
+        src/game/engine/component/wallkick.h src/game/engine/component/wallkick.c
         )
 
 if (WIN32)

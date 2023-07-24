@@ -1,5 +1,6 @@
 #include "active-piece.h"
 #include "../data/piece-data.h"
+#include "wallkick.h"
 
 void activePiece_newPiece(ActivePiece *active, Piece piece) {
     active->piece = piece;
@@ -58,12 +59,10 @@ void activePiece_placeToField(ActivePiece *active) {
 }
 
 void activePiece_rotate(ActivePiece *active, int amount) {
-    if (!activePiece_collidesWithOrientation(
-            active,
-            piece_getNewOrientation(&active->piece, amount),
-            (Point) {0}
-    )) {
+    Point wallkickResult;
+    if (executeWallkick(&wallkickResult, active, amount)) {
         piece_rotate(&active->piece, amount);
+        point_add(&active->pos, wallkickResult);
     }
 }
 
