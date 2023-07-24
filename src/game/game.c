@@ -4,6 +4,7 @@
 #include "engine/component/piece.h"
 #include "engine/engine.h"
 #include "engine/component/field.h"
+#include "engine/component/next-queue.h"
 
 //temp until custom controls
 #ifdef OCELOT_CONTROLS
@@ -123,7 +124,7 @@ void game_run(Game *game) {
 
                     case SDLK_x:
 #ifndef OCELOT_CONTROLS
-                    case SDLK_UP:
+                        case SDLK_UP:
 #endif
                         if (isPaused) break;
                         engine_onRotateRight(game->engine);
@@ -180,7 +181,9 @@ void game_run(Game *game) {
             //ghost
             SDL_SetRenderDrawColor(renderer, drawColorGhost, drawColorGhost, drawColorGhost, 255);
             game_renderer_drawPiece(renderer, activePiece,
-                                    (Point) {activePiecePos.x, activePiecePos.y - engine_getDistanceFromActivePieceToGround(game->engine)});
+                                    (Point) {activePiecePos.x, activePiecePos.y -
+                                                               engine_getDistanceFromActivePieceToGround(
+                                                                       game->engine)});
 
             //active
             SDL_SetRenderDrawColor(renderer, drawColor, drawColor, drawColor, 255);
@@ -188,7 +191,19 @@ void game_run(Game *game) {
                                     activePiecePos);
             //next
             Piece *nextPieces = engine_getNextPieces(game->engine);
-            game_renderer_drawPiece(renderer, &nextPieces[0], (Point) {11, 16});
+            for (int i = 0; i < NEXT_QUEUE_LENGTH; i++) {
+                Piece *piece = &nextPieces[i];
+                Point additionalOffset;
+                switch (piece->type) {
+                    case PieceType_O:
+                        additionalOffset = (Point) {1, 1};
+                        break;
+                    default:
+                        additionalOffset = (Point) {0};
+                        break;
+                }
+                game_renderer_drawPiece(renderer, piece, point_addToNew((Point) {11, 16 - i * 4}, additionalOffset));
+            }
         }
 
         SDL_RenderPresent(renderer);
