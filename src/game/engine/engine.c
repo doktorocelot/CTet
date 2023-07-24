@@ -8,6 +8,7 @@
 #include "component/gravity.h"
 #include "component/next-queue.h"
 #include "component/hold-queue.h"
+#include "component/lockdown.h"
 
 static int retryCount = 0;
 
@@ -17,6 +18,7 @@ struct Engine {
     Gravity gravity;
     NextQueue nextQueue;
     HoldQueue holdQueue;
+    Lockdown lockdown;
     ActivePiece active;
 };
 
@@ -55,6 +57,9 @@ void engine_reset(Engine *engine) {
     // Setup HOLD
     holdQueue_reset(&engine->holdQueue);
 
+    // Setup Lockdown
+    engine->lockdown = (Lockdown) {0};
+
     // Setup ActivePiece
     engine_spawnNewPiece(engine);
 }
@@ -71,6 +76,10 @@ void engine_tick(Engine *engine, float deltaTime) {
         if (!activePiece_dropOneLine(&engine->active)) {
             gravity_onHitFloor(&engine->gravity);
         }
+    }
+
+    if (lockdown_tick(&engine->lockdown, &engine->active, deltaTime)) {
+        engine_lock(engine);
     }
 
     int hitList[FIELD_HEIGHT + 1];
@@ -123,11 +132,11 @@ void engine_onShiftLeftUp(Engine *engine) {
 
 void engine_onHardDrop(Engine *engine) {
     activePiece_slamToFloor(&engine->active);
-    activePiece_placeToField(&engine->active);
     engine_lock(engine);
 }
 
 void engine_lock(Engine *engine) {
+    activePiece_placeToField(&engine->active);
     holdQueue_onLock(&engine->holdQueue);
     engine_spawnNewPiece(engine);
 }

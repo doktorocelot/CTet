@@ -39,6 +39,7 @@ set(SOURCES
         src/game/engine/component/gravity.h src/game/engine/component/gravity.c
         src/game/engine/component/next-queue.h src/game/engine/component/next-queue.c
         src/game/engine/component/hold-queue.h src/game/engine/component/hold-queue.c
+        src/game/engine/component/lockdown.h src/game/engine/component/lockdown.c
         )
 
 if (WIN32)
