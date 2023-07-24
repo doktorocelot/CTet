@@ -1,13 +1,9 @@
 #include "active-piece.h"
-
-void activePiece_newPieceFromType(ActivePiece *active, PieceType type) {
-    active->piece = piece_buildFromType(type);
-    active->pos = (Point) {4, 18};
-}
+#include "../data/piece-data.h"
 
 void activePiece_newPiece(ActivePiece *active, Piece piece) {
     active->piece = piece;
-    active->pos = (Point) {4, 18};
+    active->pos = point_addToNew((Point) {3, 19}, pieceData_getSpawnOffset(piece.type));
 }
 
 void activePiece_shift(ActivePiece *active, ShiftDirection direction) {

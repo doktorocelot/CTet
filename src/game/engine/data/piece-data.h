@@ -7,3 +7,5 @@
 Point *pieceData_getCoords(PieceType type, Orientation orientation);
 
 BlockColor pieceData_getColorForType(PieceType type);
+
+Point pieceData_getSpawnOffset(PieceType type);

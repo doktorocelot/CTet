@@ -56,3 +56,18 @@ static const BlockColor BLOCK_COLORS[] = {
 BlockColor pieceData_getColorForType(PieceType type) {
     return BLOCK_COLORS[type];
 }
+
+static const Point PIECE_SPAWN_OFFSETS[] = {
+        // I, J, L, O, S, T, Z
+        0, -1,
+        0, 0,
+        0, 0,
+        1, 1,
+        0, 0,
+        0, 0,
+        0, 0,
+};
+
+Point pieceData_getSpawnOffset(PieceType type) {
+    return PIECE_SPAWN_OFFSETS[type];
+}
