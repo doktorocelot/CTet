@@ -70,9 +70,5 @@ void field_collapseHitList(Field *field, const int *hitList) {
 }
 
 void field_killRow(Field *field, int row) {
-    Block *matrixPtr = (Block *) field->matrix[row];
-    for (int i = 0; i < FIELD_WIDTH; i++) {
-        *matrixPtr = (Block) {.color = BlockColor_NONE};
-        matrixPtr++;
-    }
+    memset(field->matrix[row], 0, FIELD_WIDTH * sizeof(Block));
 };
