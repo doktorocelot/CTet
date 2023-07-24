@@ -8,6 +8,8 @@
 #include "component/gravity.h"
 #include "component/next-queue.h"
 
+static int retryCount = 0;
+
 struct Engine {
     Field field;
     AutoshiftVars autoshiftVars;
@@ -42,7 +44,8 @@ void engine_reset(Engine *engine) {
     engine->gravity = (Gravity) {.msPerRow = 1000};
 
     // Setup nextSeed
-    engine->nextQueue = (NextQueue) {.nextSeed = time(NULL)};
+    engine->nextQueue = (NextQueue) {.nextSeed = (time(NULL) + retryCount * (retryCount % 10))};
+    retryCount++;
     nextQueue_reset(&engine->nextQueue);
 
     // Setup ActivePiece

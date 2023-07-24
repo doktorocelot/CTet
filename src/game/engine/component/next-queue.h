@@ -8,6 +8,8 @@
 typedef struct {
     Piece pieces[5];
     uint64_t nextSeed;
+    PieceType bag[PieceType_LENGTH];
+    int remainingPiecesInBag;
 } NextQueue;
 
 void nextQueue_reset(NextQueue *nextQueue);

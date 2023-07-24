@@ -4,7 +4,10 @@
 
 void nextQueue_genNewPieceAt(NextQueue *nextQueue, int i);
 
+void nextQueue_repopulateBag(NextQueue *nextQueue);
+
 void nextQueue_reset(NextQueue *nextQueue) {
+    nextQueue->remainingPiecesInBag = 0;
     cycleSeed(&nextQueue->nextSeed);
     for (int i = 0; i < NEXT_QUEUE_LENGTH; i++) {
         nextQueue_genNewPieceAt(nextQueue, i);
@@ -21,5 +24,24 @@ Piece nextQueue_next(NextQueue *nextQueue) { // Todo optimize with a cycling arr
 }
 
 void nextQueue_genNewPieceAt(NextQueue *nextQueue, int i) {
-    nextQueue->pieces[i] = piece_buildFromType(nextQueue->nextSeed % PieceType_LENGTH);
+    uint64_t nextSeed = nextQueue->nextSeed;
+
+    if (nextQueue->remainingPiecesInBag == 0) nextQueue_repopulateBag(nextQueue);
+
+    unsigned int selectedIndex = (unsigned int) nextSeed % nextQueue->remainingPiecesInBag;
+
+    nextQueue->pieces[i] = piece_buildFromType(nextQueue->bag[selectedIndex]);
+
+    if (selectedIndex != nextQueue->remainingPiecesInBag - 1) {
+        *(nextQueue->bag + selectedIndex) = nextQueue->bag[nextQueue->remainingPiecesInBag - 1];
+    }
+    nextQueue->remainingPiecesInBag--;
+
+}
+
+void nextQueue_repopulateBag(NextQueue *nextQueue) {
+    for (int i = 0; i < PieceType_LENGTH; i++) {
+        nextQueue->bag[i] = i;
+    }
+    nextQueue->remainingPiecesInBag = PieceType_LENGTH;
 }
