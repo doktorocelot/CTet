@@ -4,8 +4,7 @@ Just a basic stacker game (my specialty LOL) to help me learn C.
 Using SDL2 because I'm not in the mood for Win32 + DirectX/Vulkan right now.
 
 # Build
-Currently only built for Windows using MSVC.
-Looking into testing Linux soon.
+Currently only built for Windows using MSVC or Linux using GCC.
 I don't have a Mac to test, I apologize.
 
 Everything should compile and link itself. Make sure you get all the git submodules checked out.
