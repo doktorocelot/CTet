@@ -37,11 +37,7 @@ bool activePiece_collidesWith(ActivePiece *active, Point offset) {
 }
 
 void activePiece_slamToFloor(ActivePiece *active) {
-    int i = 0;
-    while (!activePiece_collidesWith(active, (Point) {0, -1}) && i < 30) {
-        active->pos.y--;
-        i++;
-    }
+    active->pos.y -= activePiece_getDistanceToGround(active);
 }
 
 int activePiece_getDistanceToGround(ActivePiece *active) {
