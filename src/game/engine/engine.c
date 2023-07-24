@@ -72,7 +72,7 @@ void engine_tick(Engine *engine, float deltaTime) {
     };
 
     int gravityResult;
-    while (gravityResult = gravity_tick(&engine->gravity, deltaTime), gravityResult) {
+    while (gravityResult = gravity_tick(&engine->gravity, &engine->active, deltaTime), gravityResult) {
         if (!activePiece_dropOneLine(&engine->active)) {
             gravity_onHitFloor(&engine->gravity);
         }

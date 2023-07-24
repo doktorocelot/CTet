@@ -1,6 +1,10 @@
 #include "gravity.h"
 
-int gravity_tick(Gravity *gravity, float deltaTime) {
+int gravity_tick(Gravity *gravity, ActivePiece *activePiece, float deltaTime) {
+    if (activePiece_collidesWith(activePiece, (Point) {0, -1})) {
+        gravity_onHitFloor(gravity);
+        return 0;
+    }
     if (gravity->gravityAccumulator >= 1) {
         gravity->gravityAccumulator -= 1;
         return 1;
