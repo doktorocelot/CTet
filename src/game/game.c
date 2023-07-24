@@ -6,7 +6,6 @@
 #include "engine/component/field.h"
 
 //temp until custom controls
-
 #ifdef OCELOT_CONTROLS
 #define CONTROL_HDROP SDLK_UP
 #else
