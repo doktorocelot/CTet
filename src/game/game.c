@@ -5,6 +5,14 @@
 #include "engine/engine.h"
 #include "engine/component/field.h"
 
+//temp until custom controls
+
+#ifdef OCELOT_CONTROLS
+#define CONTROL_HDROP SDLK_UP
+#else
+#define CONTROL_HDROP SDLK_SPACE
+#endif
+
 struct Game {
     SDL_Window *window;
     SDL_Renderer *sdlRenderer;
@@ -84,20 +92,24 @@ void game_run(Game *game) {
                         game_makeFullscreen(game);
                         break;
 
-                    //game
+                        //game
                     case SDLK_RIGHT:
                         engine_onShiftRightDown(game->engine);
                         break;
                     case SDLK_LEFT:
                         engine_onShiftLeftDown(game->engine);
                         break;
-                    case SDLK_UP:
+                    case CONTROL_HDROP:
                         engine_onHardDrop(game->engine);
                         break;
                     case SDLK_z:
                         engine_onRotateLeft(game->engine);
                         break;
+
                     case SDLK_x:
+#ifndef OCELOT_CONTROLS
+                    case SDLK_UP:
+#endif
                         engine_onRotateRight(game->engine);
                 }
             } else if (event.type == SDL_KEYUP) {

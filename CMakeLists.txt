@@ -1,4 +1,10 @@
 cmake_minimum_required(VERSION 3.25)
+
+option(OCELOT_CONTROLS OFF)
+if (OCELOT_CONTROLS)
+    add_compile_definitions(OCELOT_CONTROLS)
+endif()
+
 project(CTet C)
 set(CMAKE_C_STANDARD 11)
 
@@ -6,6 +12,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 find_package(SDL2 REQUIRED)
 include_directories(CTet ${SDL2_INCLUDE_DIRS})
+
 
 file(COPY extern/SDL2.dll DESTINATION ${CMAKE_BINARY_DIR}/bin)
 
