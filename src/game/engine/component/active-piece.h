@@ -21,6 +21,8 @@ typedef enum {
 
 void activePiece_newPieceFromType(ActivePiece *active, PieceType type);
 
+void activePiece_newPiece(ActivePiece *active, Piece piece);
+
 void activePiece_shift(ActivePiece *active, ShiftDirection direction);
 
 bool activePiece_dropOneLine(ActivePiece *active);

@@ -5,6 +5,11 @@ void activePiece_newPieceFromType(ActivePiece *active, PieceType type) {
     active->pos = (Point) {4, 18};
 }
 
+void activePiece_newPiece(ActivePiece *active, Piece piece) {
+    active->piece = piece;
+    active->pos = (Point) {4, 18};
+}
+
 void activePiece_shift(ActivePiece *active, ShiftDirection direction) {
     if (!activePiece_collidesWith(active, (Point) {direction, 0})) {
         active->pos.x += direction;

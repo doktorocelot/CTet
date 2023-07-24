@@ -20,6 +20,8 @@ int engine_getDistanceFromActivePieceToGround(Engine *engine);
 
 Block *engine_getFieldMatrix(Engine *engine);
 
+Piece *engine_getNextPieces(Engine *engine);
+
 void engine_onShiftRightDown(Engine *engine);
 
 void engine_onShiftRightUp(Engine *engine);

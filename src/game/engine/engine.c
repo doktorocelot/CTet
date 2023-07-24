@@ -6,13 +6,14 @@
 #include "../../math/prng.h"
 #include "component/autoshift.h"
 #include "component/gravity.h"
+#include "component/next-queue.h"
 
 struct Engine {
     Field field;
-    ActivePiece active;
     AutoshiftVars autoshiftVars;
     Gravity gravity;
-    uint64_t nextSeed;
+    NextQueue nextQueue;
+    ActivePiece active;
 };
 
 
@@ -34,9 +35,6 @@ void engine_reset(Engine *engine) {
     // Setup Field
     field_clear(&engine->field);
 
-    // Setup ActivePiece
-    engine_spawnNewPiece(engine);
-
     // Setup Autoshift
     engine->autoshiftVars = (AutoshiftVars) {0};
 
@@ -44,8 +42,11 @@ void engine_reset(Engine *engine) {
     engine->gravity = (Gravity) {.msPerRow = 1000};
 
     // Setup nextSeed
-    srand(time(NULL)); // NOLINT(cert-msc51-cpp)
-    engine->nextSeed = rand();  // NOLINT(cert-msc50-cpp)
+    engine->nextQueue = (NextQueue) {.nextSeed = time(NULL)};
+    nextQueue_reset(&engine->nextQueue);
+
+    // Setup ActivePiece
+    engine_spawnNewPiece(engine);
 }
 
 void engine_tick(Engine *engine, float deltaTime) {
@@ -82,6 +83,10 @@ int engine_getDistanceFromActivePieceToGround(Engine *engine) {
 
 Block *engine_getFieldMatrix(Engine *engine) {
     return (Block *) engine->field.matrix;
+}
+
+Piece *engine_getNextPieces(Engine *engine) {
+    return (Piece *) engine->nextQueue.pieces;
 }
 
 void engine_onShiftRightDown(Engine *engine) {
@@ -125,6 +130,5 @@ void engine_onSoftDropUp(Engine *engine) {
 }
 
 void engine_spawnNewPiece(Engine *engine) {
-    cycleSeed(&engine->nextSeed);
-    activePiece_newPieceFromType(&engine->active, engine->nextSeed % 7);
+    activePiece_newPiece(&engine->active, nextQueue_next(&engine->nextQueue));
 }

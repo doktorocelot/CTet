@@ -7,7 +7,7 @@
 
 // Arranged alphabetically
 typedef enum {
-    PieceType_None = -1,
+    PieceType_NONE = -1,
     PieceType_I,
     PieceType_J,
     PieceType_L,
@@ -15,6 +15,7 @@ typedef enum {
     PieceType_S,
     PieceType_T,
     PieceType_Z,
+    PieceType_LENGTH,
 } PieceType;
 
 typedef enum {

@@ -186,8 +186,9 @@ void game_run(Game *game) {
             SDL_SetRenderDrawColor(renderer, drawColor, drawColor, drawColor, 255);
             game_renderer_drawPiece(renderer, activePiece,
                                     activePiecePos);
-
-
+            //next
+            Piece *nextPieces = engine_getNextPieces(game->engine);
+            game_renderer_drawPiece(renderer, &nextPieces[0], (Point) {11, 16});
         }
 
         SDL_RenderPresent(renderer);
