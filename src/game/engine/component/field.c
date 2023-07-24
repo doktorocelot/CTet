@@ -61,8 +61,8 @@ void field_collapseHitList(Field *field, const int *hitList) {
     int rowToKill;
     for (int i = 0; rowToKill = hitList[i], rowToKill != 0xFF && i <= FIELD_HEIGHT; i++) {
         memmove(
-                &field->matrix[rowToKill][0],
-                &field->matrix[rowToKill + 1][0],
+                field->matrix[rowToKill],
+                field->matrix[rowToKill + 1],
                 FIELD_WIDTH * (FIELD_HEIGHT - rowToKill) * sizeof(Block)
         );
         field_killRow(field, FIELD_HEIGHT - 1);
