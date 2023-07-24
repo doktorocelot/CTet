@@ -8,8 +8,8 @@
 #include "component/gravity.h"
 
 struct Engine {
-    ActivePiece active;
     Field field;
+    ActivePiece active;
     AutoshiftVars autoshiftVars;
     Gravity gravity;
     uint64_t nextSeed;
@@ -18,6 +18,8 @@ struct Engine {
 
 Engine *engine_create() {
     Engine *engine = malloc(sizeof(Engine));
+
+    engine->active.field = &engine->field;
 
     engine_reset(engine);
 
@@ -29,14 +31,21 @@ void engine_destroy(Engine *engine) {
 }
 
 void engine_reset(Engine *engine) {
-    engine->active.field = &engine->field;
+    // Setup Field
     field_clear(&engine->field);
-    engine->autoshiftVars = (AutoshiftVars) {0};
-    srand(time(NULL)); // NOLINT(cert-msc51-cpp)
-    engine->nextSeed = rand();  // NOLINT(cert-msc50-cpp)
+
+    // Setup ActivePiece
     engine_spawnNewPiece(engine);
 
-    engine->gravity.msPerRow = 1000;
+    // Setup Autoshift
+    engine->autoshiftVars = (AutoshiftVars) {0};
+
+    // Setup Gravity
+    engine->gravity = (Gravity) {.msPerRow = 1000};
+
+    // Setup nextSeed
+    srand(time(NULL)); // NOLINT(cert-msc51-cpp)
+    engine->nextSeed = rand();  // NOLINT(cert-msc50-cpp)
 }
 
 void engine_tick(Engine *engine, float deltaTime) {
