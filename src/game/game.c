@@ -20,12 +20,12 @@ struct Game {
     bool isPaused;
 };
 
-static const int GAME_ENGINE_WIDTH = 720;
-static const int GAME_ENGINE_HEIGHT = 720;
+#define GAME_ENGINE_WIDTH 720
+#define GAME_ENGINE_HEIGHT 720
 
-static const int PADDING_H = 191;
-static const int PADDING_V = 22;
-static const int CELL_SIZE = 34;
+static int CELL_SIZE;
+static int PADDING_H;
+static int PADDING_V;
 
 static void game_setupRenderer(Game *game);
 
@@ -46,6 +46,9 @@ Game *game_create() {
 
     SDL_Init(SDL_INIT_VIDEO);
 
+    CELL_SIZE = (int) (GAME_ENGINE_HEIGHT / 22.5);
+    PADDING_H = (GAME_ENGINE_WIDTH - CELL_SIZE * FIELD_WIDTH) / 2;
+    PADDING_V = (GAME_ENGINE_HEIGHT - CELL_SIZE * FIELD_HEIGHT) / 2;
 
     game->window = SDL_CreateWindow(
             "CTet",
