@@ -5,14 +5,15 @@
 #include "component/active-piece.h"
 #include "../../math/prng.h"
 #include "component/autoshift.h"
+#include "component/gravity.h"
 
 struct Engine {
     ActivePiece active;
     Field field;
     AutoshiftVars autoshiftVars;
+    Gravity gravity;
     uint64_t nextSeed;
 };
-
 
 
 Engine *engine_create() {
@@ -25,6 +26,8 @@ Engine *engine_create() {
     engine->nextSeed = rand();  // NOLINT(cert-msc50-cpp)
     engine_spawnNewPiece(engine);
 
+    engine->gravity.msPerRow = 1000;
+
     return engine;
 }
 
@@ -34,11 +37,18 @@ void engine_destroy(Engine *engine) {
 
 void engine_tick(Engine *engine, float deltaTime) {
 
-    int autoshiftResult = autoshift_tick(&engine->autoshiftVars, deltaTime);
-    while (autoshiftResult) {
+    int autoshiftResult;
+    while (autoshiftResult = autoshift_tick(&engine->autoshiftVars, deltaTime), autoshiftResult) {
         activePiece_shift(&engine->active, autoshiftResult);
-        autoshiftResult = autoshift_tick(&engine->autoshiftVars, deltaTime);
     };
+
+    int gravityResult;
+    while (gravityResult = gravity_tick(&engine->gravity, deltaTime), gravityResult) {
+        if (!activePiece_dropOneLine(&engine->active)) {
+            gravity_onHitFloor(&engine->gravity);
+        }
+    }
+
 }
 
 Piece *engine_getActivePiece(Engine *engine) {
@@ -81,15 +91,23 @@ void engine_onHardDrop(Engine *engine) {
     engine_spawnNewPiece(engine);
 }
 
-void engine_spawnNewPiece(Engine *engine) {
-    cycleSeed(&engine->nextSeed);
-    activePiece_newPieceFromType(&engine->active, engine->nextSeed % 7);
-}
-
 void engine_onRotateLeft(Engine *engine) {
     activePiece_rotate(&engine->active, ROTATION_CCW);
 }
 
 void engine_onRotateRight(Engine *engine) {
     activePiece_rotate(&engine->active, ROTATION_CW);
+}
+
+void engine_onSoftDropDown(Engine *engine) {
+    engine->gravity.softDropIsDown = true;
+}
+
+void engine_onSoftDropUp(Engine *engine) {
+    engine->gravity.softDropIsDown = false;
+}
+
+void engine_spawnNewPiece(Engine *engine) {
+    cycleSeed(&engine->nextSeed);
+    activePiece_newPieceFromType(&engine->active, engine->nextSeed % 7);
 }

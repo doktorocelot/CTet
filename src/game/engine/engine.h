@@ -32,4 +32,8 @@ void engine_onRotateLeft(Engine *engine);
 
 void engine_onRotateRight(Engine *engine);
 
+void engine_onSoftDropDown(Engine *engine);
+
+void engine_onSoftDropUp(Engine *engine);
+
 void engine_spawnNewPiece(Engine *engine);

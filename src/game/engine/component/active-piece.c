@@ -11,6 +11,12 @@ void activePiece_shift(ActivePiece *active, ShiftDirection direction) {
     }
 }
 
+bool activePiece_dropOneLine(ActivePiece *active) {
+    if (activePiece_collidesWith(active, (Point) {0, -1})) return false;
+    active->pos.y--;
+    return true;
+}
+
 bool activePiece_collidesWithOrientation(ActivePiece *active, Orientation orientation, Point offset) {
     Point *coordPtr = piece_getCoordsForOrientation(&active->piece, orientation);
     for (int i = 0; i < BLOCKS_PER_PIECE; i++) {

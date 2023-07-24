@@ -23,6 +23,8 @@ void activePiece_newPieceFromType(ActivePiece *active, PieceType type);
 
 void activePiece_shift(ActivePiece *active, ShiftDirection direction);
 
+bool activePiece_dropOneLine(ActivePiece *active);
+
 bool activePiece_collidesWithOrientation(ActivePiece *active, Orientation orientation, Point offset);
 
 bool activePiece_collidesWith(ActivePiece *active, Point offset);

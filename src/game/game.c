@@ -112,6 +112,10 @@ void game_run(Game *game) {
                     case SDLK_UP:
 #endif
                         engine_onRotateRight(game->engine);
+                        break;
+                    case SDLK_DOWN:
+                        engine_onSoftDropDown(game->engine);
+                        break;
                 }
             } else if (event.type == SDL_KEYUP && event.key.repeat == 0) {
                 switch (event.key.keysym.sym) {
@@ -120,6 +124,9 @@ void game_run(Game *game) {
                         break;
                     case SDLK_LEFT:
                         engine_onShiftLeftUp(game->engine);
+                        break;
+                    case SDLK_DOWN:
+                        engine_onSoftDropUp(game->engine);
                         break;
                 }
             }
@@ -143,15 +150,20 @@ void game_run(Game *game) {
         if (game->engine != NULL) {
             game_renderer_drawField(renderer, engine_getFieldMatrix(game->engine));
 
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
             Point activePiecePos = *engine_getActivePiecePos(game->engine);
             Piece *activePiece = engine_getActivePiece(game->engine);
-            game_renderer_drawPiece(renderer, activePiece,
-                                    activePiecePos);
 
+            //ghost
             SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
             game_renderer_drawPiece(renderer, activePiece,
                                     (Point) {activePiecePos.x, activePiecePos.y - engine_getDistanceFromActivePieceToGround(game->engine)});
+
+            //active
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            game_renderer_drawPiece(renderer, activePiece,
+                                    activePiecePos);
+
+
         }
 
         SDL_RenderPresent(renderer);
