@@ -22,6 +22,8 @@ Block *engine_getFieldMatrix(Engine *engine);
 
 Piece *engine_getNextPieces(Engine *engine);
 
+Piece *engine_getHeldPiece(Engine *engine);
+
 void engine_onShiftRightDown(Engine *engine);
 
 void engine_onShiftRightUp(Engine *engine);
@@ -39,5 +41,7 @@ void engine_onRotateRight(Engine *engine);
 void engine_onSoftDropDown(Engine *engine);
 
 void engine_onSoftDropUp(Engine *engine);
+
+void engine_onHoldDown(Engine *engine);
 
 void engine_spawnNewPiece(Engine *engine);

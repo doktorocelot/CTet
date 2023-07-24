@@ -7,6 +7,7 @@
 #include "component/autoshift.h"
 #include "component/gravity.h"
 #include "component/next-queue.h"
+#include "component/hold-queue.h"
 
 static int retryCount = 0;
 
@@ -15,9 +16,12 @@ struct Engine {
     AutoshiftVars autoshiftVars;
     Gravity gravity;
     NextQueue nextQueue;
+    HoldQueue holdQueue;
     ActivePiece active;
 };
 
+
+static void engine_lock(Engine *engine);
 
 Engine *engine_create() {
     Engine *engine = malloc(sizeof(Engine));
@@ -43,10 +47,13 @@ void engine_reset(Engine *engine) {
     // Setup Gravity
     engine->gravity = (Gravity) {.msPerRow = 1000};
 
-    // Setup nextSeed
+    // Setup NEXT
     engine->nextQueue = (NextQueue) {.nextSeed = (time(NULL) + retryCount * (retryCount % 10))};
     retryCount++;
     nextQueue_reset(&engine->nextQueue);
+
+    // Setup HOLD
+    holdQueue_reset(&engine->holdQueue);
 
     // Setup ActivePiece
     engine_spawnNewPiece(engine);
@@ -92,6 +99,10 @@ Piece *engine_getNextPieces(Engine *engine) {
     return (Piece *) engine->nextQueue.pieces;
 }
 
+Piece *engine_getHeldPiece(Engine *engine) {
+    return &engine->holdQueue.held;
+}
+
 void engine_onShiftRightDown(Engine *engine) {
     activePiece_shift(&engine->active, ShiftDirection_RIGHT);
     autoshift_onPress(&engine->autoshiftVars, ShiftDirection_RIGHT);
@@ -113,6 +124,11 @@ void engine_onShiftLeftUp(Engine *engine) {
 void engine_onHardDrop(Engine *engine) {
     activePiece_slamToFloor(&engine->active);
     activePiece_placeToField(&engine->active);
+    engine_lock(engine);
+}
+
+void engine_lock(Engine *engine) {
+    holdQueue_onLock(&engine->holdQueue);
     engine_spawnNewPiece(engine);
 }
 
@@ -130,6 +146,15 @@ void engine_onSoftDropDown(Engine *engine) {
 
 void engine_onSoftDropUp(Engine *engine) {
     engine->gravity.softDropIsDown = false;
+}
+
+void engine_onHoldDown(Engine *engine) {
+    Piece holdReturn;
+    if (holdQueue_performHold(&engine->holdQueue, &holdReturn, &engine->active.piece)) {
+        if (holdReturn.type == PieceType_NONE) engine_spawnNewPiece(engine);
+        else activePiece_newPiece(&engine->active, holdReturn);
+    }
+
 }
 
 void engine_spawnNewPiece(Engine *engine) {

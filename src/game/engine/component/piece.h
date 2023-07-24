@@ -41,6 +41,8 @@ Piece piece_buildFromType(PieceType type);
 
 void piece_rotate(Piece *piece, int amount);
 
+void piece_resetOrientation(Piece *piece);
+
 Orientation piece_getNewOrientation(const Piece *piece, int amount);
 
 Point *piece_getCoordsForOrientation(Piece *piece, Orientation orientation);

@@ -21,8 +21,14 @@ Piece piece_buildFromType(PieceType type) {
 static void piece_updateNewOrientation(Piece *piece);
 
 
+
 void piece_rotate(Piece *piece, int amount) {
     piece->orientation = piece_getNewOrientation(piece, amount);
+    piece_updateNewOrientation(piece);
+}
+
+void piece_resetOrientation(Piece *piece) {
+    piece->orientation = DEFAULT_ORIENTATION;
     piece_updateNewOrientation(piece);
 }
 

@@ -39,6 +39,8 @@ static void game_renderer_drawField(SDL_Renderer *renderer, Block *matrix);
 
 static int game_getDrawColor(Game *game);
 
+Point getPieceQueueOffset(const Piece *piece);
+
 Game *game_create() {
     Game *game = malloc(sizeof(Game));
 
@@ -133,6 +135,10 @@ void game_run(Game *game) {
                         if (isPaused) break;
                         engine_onSoftDropDown(game->engine);
                         break;
+                    case SDLK_c:
+                    case SDLK_LSHIFT:
+                        engine_onHoldDown(game->engine);
+                        break;
                 }
             } else if (event.type == SDL_KEYUP && event.key.repeat == 0) {
                 switch (event.key.keysym.sym) {
@@ -193,21 +199,34 @@ void game_run(Game *game) {
             Piece *nextPieces = engine_getNextPieces(game->engine);
             for (int i = 0; i < NEXT_QUEUE_LENGTH; i++) {
                 Piece *piece = &nextPieces[i];
-                Point additionalOffset;
-                switch (piece->type) {
-                    case PieceType_O:
-                        additionalOffset = (Point) {1, 1};
-                        break;
-                    default:
-                        additionalOffset = (Point) {0};
-                        break;
-                }
+                Point additionalOffset = getPieceQueueOffset(piece);
                 game_renderer_drawPiece(renderer, piece, point_addToNew((Point) {11, 16 - i * 4}, additionalOffset));
+            }
+
+            //held
+            Piece *held = engine_getHeldPiece(game->engine);
+            if (held->type != PieceType_NONE) {
+                piece_resetOrientation(held);
+                Point additionalOffset = getPieceQueueOffset(held);
+                game_renderer_drawPiece(renderer, held, point_addToNew((Point) {-5, 16}, additionalOffset));
             }
         }
 
         SDL_RenderPresent(renderer);
     }
+}
+
+Point getPieceQueueOffset(const Piece *piece) {
+    Point additionalOffset;
+    switch (piece->type) {
+        case PieceType_O:
+            additionalOffset = (Point) {1, 1};
+            break;
+        default:
+            additionalOffset = (Point) {0};
+            break;
+    }
+    return additionalOffset;
 }
 
 void game_makeFullscreen(Game *game) {
