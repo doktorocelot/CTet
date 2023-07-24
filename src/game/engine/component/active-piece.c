@@ -4,6 +4,7 @@
 void activePiece_newPiece(ActivePiece *active, Piece piece) {
     active->piece = piece;
     active->pos = point_addToNew((Point) {3, 19}, pieceData_getSpawnOffset(piece.type));
+    activePiece_dropOneLine(active);
 }
 
 void activePiece_shift(ActivePiece *active, ShiftDirection direction) {
