@@ -29,6 +29,8 @@ bool activePiece_collidesWith(ActivePiece *active, Point offset);
 
 void activePiece_slamToFloor(ActivePiece *active);
 
+int activePiece_getDistanceToGround(ActivePiece *active);
+
 void activePiece_placeToField(ActivePiece *active);
 
 void activePiece_rotate(ActivePiece *active, int amount);

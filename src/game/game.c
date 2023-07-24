@@ -143,8 +143,16 @@ void game_run(Game *game) {
         game_renderer_drawBoard(renderer);
         if (game->engine != NULL) {
             game_renderer_drawField(renderer, engine_getFieldMatrix(game->engine));
-            game_renderer_drawPiece(renderer, engine_getActivePiece(game->engine),
-                                    *engine_getActivePiecePos(game->engine));
+
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            Point activePiecePos = *engine_getActivePiecePos(game->engine);
+            Piece *activePiece = engine_getActivePiece(game->engine);
+            game_renderer_drawPiece(renderer, activePiece,
+                                    activePiecePos);
+
+            SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+            game_renderer_drawPiece(renderer, activePiece,
+                                    (Point) {activePiecePos.x, activePiecePos.y - engine_getDistanceFromActivePieceToGround(game->engine)});
         }
 
         SDL_RenderPresent(renderer);
@@ -174,6 +182,7 @@ void game_renderer_drawPiece(SDL_Renderer *renderer, Piece *piece, Point offset)
                            });
     }
 }
+
 
 void game_renderer_drawBoard(SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);

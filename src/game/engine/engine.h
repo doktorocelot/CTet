@@ -14,6 +14,8 @@ Piece *engine_getActivePiece(Engine *engine);
 
 Point *engine_getActivePiecePos(Engine *engine);
 
+int engine_getDistanceFromActivePieceToGround(Engine *engine);
+
 Block *engine_getFieldMatrix(Engine *engine);
 
 void engine_onShiftRightDown(Engine *engine);
@@ -29,3 +31,5 @@ void engine_onHardDrop(Engine *engine);
 void engine_onRotateLeft(Engine *engine);
 
 void engine_onRotateRight(Engine *engine);
+
+void engine_spawnNewPiece(Engine *engine);

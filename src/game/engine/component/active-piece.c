@@ -36,6 +36,14 @@ void activePiece_slamToFloor(ActivePiece *active) {
     }
 }
 
+int activePiece_getDistanceToGround(ActivePiece *active) {
+    int distance = 0;
+    while (!activePiece_collidesWith(active, (Point) {0, -distance - 1})) {
+        distance++;
+    }
+    return distance;
+}
+
 void activePiece_placeToField(ActivePiece *active) {
     for (int i = 0; i < BLOCKS_PER_PIECE; i++) {
         Piece piece = active->piece;

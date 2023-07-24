@@ -1,4 +1,6 @@
 #include <malloc.h>
+#include <stdlib.h>
+#include <time.h>
 #include "engine.h"
 #include "component/active-piece.h"
 #include "../../math/prng.h"
@@ -12,13 +14,16 @@ struct Engine {
 };
 
 
+
 Engine *engine_create() {
     Engine *engine = calloc(1, sizeof(Engine));
 
-    activePiece_newPieceFromType(&engine->active, PieceType_T);
     engine->active.field = &engine->field;
     field_clear(&engine->field);
     engine->autoshiftVars = (AutoshiftVars) {0};
+    srand(time(NULL)); // NOLINT(cert-msc51-cpp)
+    engine->nextSeed = rand();  // NOLINT(cert-msc50-cpp)
+    engine_spawnNewPiece(engine);
 
     return engine;
 }
@@ -42,6 +47,10 @@ Piece *engine_getActivePiece(Engine *engine) {
 
 Point *engine_getActivePiecePos(Engine *engine) {
     return &engine->active.pos;
+}
+
+int engine_getDistanceFromActivePieceToGround(Engine *engine) {
+    return activePiece_getDistanceToGround(&engine->active);
 }
 
 Block *engine_getFieldMatrix(Engine *engine) {
@@ -69,6 +78,10 @@ void engine_onShiftLeftUp(Engine *engine) {
 void engine_onHardDrop(Engine *engine) {
     activePiece_slamToFloor(&engine->active);
     activePiece_placeToField(&engine->active);
+    engine_spawnNewPiece(engine);
+}
+
+void engine_spawnNewPiece(Engine *engine) {
     cycleSeed(&engine->nextSeed);
     activePiece_newPieceFromType(&engine->active, engine->nextSeed % 7);
 }
