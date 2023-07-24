@@ -91,7 +91,7 @@ void game_run(Game *game) {
                         game_makeFullscreen(game);
                         break;
                     case SDLK_r:
-                        game->engine = engine_create();
+                        engine_reset(game->engine);
                         break;
                         //game
                     case SDLK_RIGHT:

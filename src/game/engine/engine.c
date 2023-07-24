@@ -17,8 +17,18 @@ struct Engine {
 
 
 Engine *engine_create() {
-    Engine *engine = calloc(1, sizeof(Engine));
+    Engine *engine = malloc(sizeof(Engine));
 
+    engine_reset(engine);
+
+    return engine;
+}
+
+void engine_destroy(Engine *engine) {
+    free(engine);
+}
+
+void engine_reset(Engine *engine) {
     engine->active.field = &engine->field;
     field_clear(&engine->field);
     engine->autoshiftVars = (AutoshiftVars) {0};
@@ -27,12 +37,6 @@ Engine *engine_create() {
     engine_spawnNewPiece(engine);
 
     engine->gravity.msPerRow = 1000;
-
-    return engine;
-}
-
-void engine_destroy(Engine *engine) {
-    free(engine);
 }
 
 void engine_tick(Engine *engine, float deltaTime) {

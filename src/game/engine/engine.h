@@ -8,6 +8,8 @@ Engine *engine_create();
 
 void engine_destroy(Engine *engine);
 
+void engine_reset(Engine *engine);
+
 void engine_tick(Engine *engine, float deltaTime);
 
 Piece *engine_getActivePiece(Engine *engine);
