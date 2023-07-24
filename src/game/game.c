@@ -19,8 +19,8 @@ struct Game {
     Engine *engine;
 };
 
-static const int GAME_ENGINE_WIDTH = 1280;
-static const int GAME_ENGINE_HEIGHT = 1280;
+static const int GAME_ENGINE_WIDTH = 720;
+static const int GAME_ENGINE_HEIGHT = 720;
 
 static const int PADDING_H = 340;
 static const int PADDING_V = 40;
