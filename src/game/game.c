@@ -22,9 +22,9 @@ struct Game {
 static const int GAME_ENGINE_WIDTH = 720;
 static const int GAME_ENGINE_HEIGHT = 720;
 
-static const int PADDING_H = 340;
-static const int PADDING_V = 40;
-static const int CELL_SIZE = 60;
+static const int PADDING_H = 191;
+static const int PADDING_V = 22;
+static const int CELL_SIZE = 34;
 
 static void game_setupRenderer(Game *game);
 
