@@ -24,6 +24,10 @@ typedef enum {
     Orientation_LENGTH,
 } Orientation;
 
+#define ROTATION_CW 1
+#define ROTATION_CCW 3
+#define ROTATION_180 2
+
 typedef struct { // Do not modify the struct directly
     Block blocks[BLOCKS_PER_PIECE];
     Point *coords;
@@ -33,3 +37,5 @@ typedef struct { // Do not modify the struct directly
 
 Piece piece_buildFromType(PieceType type);
 void piece_rotate(Piece *piece, int amount);
+Orientation piece_getNewOrientation(const Piece *piece, int amount);
+Point *piece_getCoordsForOrientation(Piece* piece, Orientation orientation);

@@ -25,3 +25,7 @@ void engine_onShiftLeftDown(Engine *engine);
 void engine_onShiftLeftUp(Engine *engine);
 
 void engine_onHardDrop(Engine *engine);
+
+void engine_onRotateLeft(Engine *engine);
+
+void engine_onRotateRight(Engine *engine);

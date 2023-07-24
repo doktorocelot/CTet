@@ -59,3 +59,10 @@ void engine_onHardDrop(Engine *engine) {
     activePiece_newPieceFromType(&engine->active, engine->nextSeed % 7);
 }
 
+void engine_onRotateLeft(Engine *engine) {
+    activePiece_rotate(&engine->active, ROTATION_CCW);
+}
+
+void engine_onRotateRight(Engine *engine) {
+    activePiece_rotate(&engine->active, ROTATION_CW);
+}

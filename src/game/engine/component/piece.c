@@ -20,9 +20,18 @@ Piece piece_buildFromType(PieceType type) {
 
 static void piece_updateNewOrientation(Piece *piece);
 
+
 void piece_rotate(Piece *piece, int amount) {
-    piece->orientation = (piece->orientation + amount) % Orientation_LENGTH;
+    piece->orientation = piece_getNewOrientation(piece, amount);
     piece_updateNewOrientation(piece);
+}
+
+Orientation piece_getNewOrientation(const Piece *piece, int amount) {
+    return (piece->orientation + amount) % Orientation_LENGTH;
+}
+
+Point *piece_getCoordsForOrientation(Piece *piece, Orientation orientation) {
+    return pieceData_getCoords(piece->type, orientation);
 }
 
 void piece_updateNewOrientation(Piece *piece) {

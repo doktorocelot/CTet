@@ -23,8 +23,12 @@ void activePiece_newPieceFromType(ActivePiece *active, PieceType type);
 
 void activePiece_shift(ActivePiece *active, ShiftDirection direction);
 
+bool activePiece_collidesWithOrientation(ActivePiece *active, Orientation orientation, Point offset);
+
 bool activePiece_collidesWith(ActivePiece *active, Point offset);
 
 void activePiece_slamToFloor(ActivePiece *active);
 
 void activePiece_placeToField(ActivePiece *active);
+
+void activePiece_rotate(ActivePiece *active, int amount);

@@ -94,6 +94,11 @@ void game_run(Game *game) {
                     case SDLK_UP:
                         engine_onHardDrop(game->engine);
                         break;
+                    case SDLK_z:
+                        engine_onRotateLeft(game->engine);
+                        break;
+                    case SDLK_x:
+                        engine_onRotateRight(game->engine);
                 }
             } else if (event.type == SDL_KEYUP) {
                 switch (event.key.keysym.sym) {

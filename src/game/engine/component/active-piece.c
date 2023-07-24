@@ -11,17 +11,21 @@ void activePiece_shift(ActivePiece *active, ShiftDirection direction) {
     }
 }
 
-bool activePiece_collidesWith(ActivePiece *active, Point offset) {
-    Point *coordPtr = active->piece.coords;
+bool activePiece_collidesWithOrientation(ActivePiece *active, Orientation orientation, Point offset) {
+    Point *coordPtr = piece_getCoordsForOrientation(&active->piece, orientation);
     for (int i = 0; i < BLOCKS_PER_PIECE; i++) {
         if (field_coordTypeAt(active->field,
                               point_addToNew(point_addToNew(active->pos, offset), *coordPtr)
-                              ) != CoordType_EMPTY) {
+        ) != CoordType_EMPTY) {
             return true;
         }
         coordPtr++;
     }
     return false;
+}
+
+bool activePiece_collidesWith(ActivePiece *active, Point offset) {
+    return activePiece_collidesWithOrientation(active, active->piece.orientation, offset);
 }
 
 void activePiece_slamToFloor(ActivePiece *active) {
@@ -40,4 +44,16 @@ void activePiece_placeToField(ActivePiece *active) {
                          point_addToNew(piece.coords[i], active->pos));
     }
 }
+
+void activePiece_rotate(ActivePiece *active, int amount) {
+    if (!activePiece_collidesWithOrientation(
+            active,
+            piece_getNewOrientation(&active->piece, amount),
+            (Point) {0}
+    )) {
+        piece_rotate(&active->piece, amount);
+    }
+}
+
+
 
