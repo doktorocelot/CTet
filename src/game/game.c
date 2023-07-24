@@ -201,7 +201,7 @@ void game_renderer_drawBoard(SDL_Renderer *renderer) {
 }
 
 void game_renderer_drawField(SDL_Renderer *renderer, Block *matrix) {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
     for (int y = 0; y < FIELD_HEIGHT; y++) {
         for (int x = 0; x < FIELD_WIDTH; x++) {
             int index = FIELD_WIDTH * y + x;
