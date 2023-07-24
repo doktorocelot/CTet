@@ -16,6 +16,7 @@ struct Game {
     SDL_Window *window;
     SDL_Renderer *sdlRenderer;
     Engine *engine;
+    bool isPaused;
 };
 
 static const int GAME_ENGINE_WIDTH = 720;
@@ -35,6 +36,8 @@ static void game_renderer_drawBoard(SDL_Renderer *renderer);
 
 static void game_renderer_drawField(SDL_Renderer *renderer, Block *matrix);
 
+static int game_getDrawColor(Game *game);
+
 Game *game_create() {
     Game *game = malloc(sizeof(Game));
 
@@ -52,6 +55,8 @@ Game *game_create() {
             SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     game->engine = NULL;
+
+    game->isPaused = false;
 
     game_setupRenderer(game);
 
@@ -78,6 +83,7 @@ void game_run(Game *game) {
     game->engine = engine_create();
 
     while (isRunning) {
+        bool isPaused = game->isPaused;
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 isRunning = false;
@@ -93,17 +99,25 @@ void game_run(Game *game) {
                     case SDLK_r:
                         engine_reset(game->engine);
                         break;
+                    case SDLK_ESCAPE:
+                        game->isPaused ^= true;
+                        break;
+
                         //game
                     case SDLK_RIGHT:
+                        if (isPaused) break;
                         engine_onShiftRightDown(game->engine);
                         break;
                     case SDLK_LEFT:
+                        if (isPaused) break;
                         engine_onShiftLeftDown(game->engine);
                         break;
                     case CONTROL_HDROP:
+                        if (isPaused) break;
                         engine_onHardDrop(game->engine);
                         break;
                     case SDLK_z:
+                        if (isPaused) break;
                         engine_onRotateLeft(game->engine);
                         break;
 
@@ -111,9 +125,11 @@ void game_run(Game *game) {
 #ifndef OCELOT_CONTROLS
                     case SDLK_UP:
 #endif
+                        if (isPaused) break;
                         engine_onRotateRight(game->engine);
                         break;
                     case SDLK_DOWN:
+                        if (isPaused) break;
                         engine_onSoftDropDown(game->engine);
                         break;
                 }
@@ -138,7 +154,7 @@ void game_run(Game *game) {
         previousTime = currentTime;
 
         //engine
-        if (game->engine != NULL) {
+        if (game->engine != NULL && !isPaused) {
             engine_tick(game->engine, deltaTime);
         }
 
@@ -146,20 +162,28 @@ void game_run(Game *game) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
+        int drawColor = game_getDrawColor(game);
+        int drawColorStack = (int) (drawColor / 1.2);
+        int drawColorGhost = (int) (drawColor / 2.2);
+
+        SDL_SetRenderDrawColor(renderer, drawColor, drawColor, drawColor, 255);
+
         game_renderer_drawBoard(renderer);
         if (game->engine != NULL) {
+            SDL_SetRenderDrawColor(renderer, drawColorStack, drawColorStack, drawColorStack, 255);
             game_renderer_drawField(renderer, engine_getFieldMatrix(game->engine));
+
 
             Point activePiecePos = *engine_getActivePiecePos(game->engine);
             Piece *activePiece = engine_getActivePiece(game->engine);
 
             //ghost
-            SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+            SDL_SetRenderDrawColor(renderer, drawColorGhost, drawColorGhost, drawColorGhost, 255);
             game_renderer_drawPiece(renderer, activePiece,
                                     (Point) {activePiecePos.x, activePiecePos.y - engine_getDistanceFromActivePieceToGround(game->engine)});
 
             //active
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_SetRenderDrawColor(renderer, drawColor, drawColor, drawColor, 255);
             game_renderer_drawPiece(renderer, activePiece,
                                     activePiecePos);
 
@@ -196,12 +220,10 @@ void game_renderer_drawPiece(SDL_Renderer *renderer, Piece *piece, Point offset)
 
 
 void game_renderer_drawBoard(SDL_Renderer *renderer) {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderDrawRect(renderer, &(SDL_Rect) {PADDING_H, PADDING_V, CELL_SIZE * 10, CELL_SIZE * 20});
 }
 
 void game_renderer_drawField(SDL_Renderer *renderer, Block *matrix) {
-    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
     for (int y = 0; y < FIELD_HEIGHT; y++) {
         for (int x = 0; x < FIELD_WIDTH; x++) {
             int index = FIELD_WIDTH * y + x;
@@ -216,4 +238,8 @@ void game_renderer_drawField(SDL_Renderer *renderer, Block *matrix) {
         }
     }
     SDL_RenderDrawRect(renderer, &(SDL_Rect) {PADDING_H, PADDING_V, CELL_SIZE * 10, CELL_SIZE * 20});
+}
+
+int game_getDrawColor(Game *game) {
+    return game->isPaused ? 150 : 255;
 }
