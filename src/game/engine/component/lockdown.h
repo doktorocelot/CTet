@@ -7,6 +7,7 @@
 
 typedef struct {
     float lockDelayAcc;
+    int pieceLowestY;
 } Lockdown;
 
 bool lockdown_tick(Lockdown *lockdown, ActivePiece *activePiece, float deltaTime);

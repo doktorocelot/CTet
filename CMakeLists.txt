@@ -21,6 +21,7 @@ add_subdirectory(extern/SDL)
 set(SOURCES
         src/main.c
 
+        src/math/quick-math.h
         src/math/point.h src/math/point.c
         src/math/prng.h src/math/prng.c
 
