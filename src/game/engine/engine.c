@@ -24,6 +24,10 @@ struct Engine {
 
 static void engine_lock(Engine *engine);
 
+static void engine_shiftActive(Engine *engine, ShiftDirection dir);
+
+static void engine_rotateActive(Engine *engine, int amount);
+
 Engine *engine_create() {
     Engine *engine = malloc(sizeof(Engine));
 
@@ -116,8 +120,7 @@ Lockdown *engine_getLockdown(Engine *engine) {
 }
 
 void engine_onShiftRightDown(Engine *engine) {
-    activePiece_shift(&engine->active, ShiftDirection_RIGHT);
-    autoshift_onPress(&engine->autoshiftVars, ShiftDirection_RIGHT);
+    engine_shiftActive(engine, ShiftDirection_RIGHT);
 }
 
 void engine_onShiftRightUp(Engine *engine) {
@@ -125,8 +128,7 @@ void engine_onShiftRightUp(Engine *engine) {
 }
 
 void engine_onShiftLeftDown(Engine *engine) {
-    activePiece_shift(&engine->active, ShiftDirection_LEFT);
-    autoshift_onPress(&engine->autoshiftVars, ShiftDirection_LEFT);
+    engine_shiftActive(engine, ShiftDirection_LEFT);
 }
 
 void engine_onShiftLeftUp(Engine *engine) {
@@ -145,11 +147,11 @@ void engine_lock(Engine *engine) {
 }
 
 void engine_onRotateLeft(Engine *engine) {
-    activePiece_rotate(&engine->active, ROTATION_CCW);
+    engine_rotateActive(engine, ROTATION_CCW);
 }
 
 void engine_onRotateRight(Engine *engine) {
-    activePiece_rotate(&engine->active, ROTATION_CW);
+    engine_rotateActive(engine, ROTATION_CW);
 }
 
 void engine_onSoftDropDown(Engine *engine) {
@@ -172,4 +174,17 @@ void engine_onHoldDown(Engine *engine) {
 void engine_spawnNewPiece(Engine *engine) {
     activePiece_newPiece(&engine->active, nextQueue_next(&engine->nextQueue));
     lockdown_onPieceSpawn(&engine->lockdown, &engine->active);
+}
+
+void engine_shiftActive(Engine *engine, ShiftDirection dir) {
+    if (activePiece_shift(&engine->active, (dir))) {
+        lockdown_onPieceManipulate(&engine->lockdown);
+    }
+    autoshift_onPress(&engine->autoshiftVars, (dir));
+}
+
+void engine_rotateActive(Engine *engine, int amount) {
+    if (activePiece_rotate(&engine->active, amount)) {
+        lockdown_onPieceManipulate(&engine->lockdown);
+    }
 }

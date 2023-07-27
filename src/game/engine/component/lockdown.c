@@ -25,3 +25,7 @@ void lockdown_onPieceSpawn(Lockdown *lockdown, ActivePiece *activePiece) {
     lockdown->lockDelayAcc = 0;
     lockdown->pieceLowestY = activePiece->pos.y;
 }
+
+void lockdown_onPieceManipulate(Lockdown *lockdown) {
+    lockdown->lockDelayAcc = 0;
+}

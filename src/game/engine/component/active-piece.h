@@ -20,7 +20,7 @@ typedef enum {
 
 void activePiece_newPiece(ActivePiece *active, Piece piece);
 
-void activePiece_shift(ActivePiece *active, ShiftDirection direction);
+bool activePiece_shift(ActivePiece *active, ShiftDirection direction);
 
 bool activePiece_dropOneLine(ActivePiece *active);
 
@@ -34,4 +34,4 @@ int activePiece_getDistanceToGround(ActivePiece *active);
 
 void activePiece_placeToField(ActivePiece *active);
 
-void activePiece_rotate(ActivePiece *active, int amount);
+bool activePiece_rotate(ActivePiece *active, int amount);

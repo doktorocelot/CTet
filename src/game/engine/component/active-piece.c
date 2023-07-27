@@ -8,10 +8,12 @@ void activePiece_newPiece(ActivePiece *active, Piece piece) {
     activePiece_dropOneLine(active);
 }
 
-void activePiece_shift(ActivePiece *active, ShiftDirection direction) {
+bool activePiece_shift(ActivePiece *active, ShiftDirection direction) {
     if (!activePiece_collidesWith(active, (Point) {direction, 0})) {
         active->pos.x += direction;
+        return true;
     }
+    return false;
 }
 
 bool activePiece_dropOneLine(ActivePiece *active) {
@@ -58,12 +60,14 @@ void activePiece_placeToField(ActivePiece *active) {
     }
 }
 
-void activePiece_rotate(ActivePiece *active, int amount) {
+bool activePiece_rotate(ActivePiece *active, int amount) {
     Point wallkickResult;
     if (executeWallkick(&wallkickResult, active, amount)) {
         piece_rotate(&active->piece, amount);
         point_add(&active->pos, wallkickResult);
+        return true;
     }
+    return false;
 }
 
 
