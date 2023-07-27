@@ -9,9 +9,13 @@
 #endif
 
 #ifdef __WIN32__
-int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
+#ifndef USE_WIN_CONSOLE
+    int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
 #else
-int main(int argc, char *argv[]) {
+    int main(int argc, char *argv[]) {
+#endif
+#else
+    int main(int argc, char *argv[]) {
 #endif
 
     Game *game = game_create();

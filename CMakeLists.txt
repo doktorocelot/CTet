@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.25)
 
+option(USE_WIN_CONSOLE OFF)
+if (USE_WIN_CONSOLE)
+    add_compile_definitions(USE_WIN_CONSOLE)
+endif ()
 option(OCELOT_CONTROLS OFF)
 if (OCELOT_CONTROLS)
     add_compile_definitions(OCELOT_CONTROLS)
@@ -44,7 +48,7 @@ set(SOURCES
         src/game/engine/component/wallkick.h src/game/engine/component/wallkick.c
         )
 
-if (WIN32)
+if (WIN32 AND NOT USE_WIN_CONSOLE)
     add_executable(CTet WIN32 ${SOURCES})
 else ()
     add_executable(CTet ${SOURCES})
