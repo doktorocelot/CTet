@@ -108,6 +108,7 @@ void game_run(Game *game) {
                         engine_reset(game->engine);
                         break;
                     case SDLK_ESCAPE:
+                        if (engine_isDead(game->engine)) break;
                         game->isPaused ^= true;
                         break;
 
@@ -169,6 +170,7 @@ void game_run(Game *game) {
         //engine
         if (game->engine != NULL && !isPaused) {
             engine_tick(game->engine, deltaTime);
+            if (engine_isDead(game->engine)) game->isPaused = true;
         }
 
         // draw

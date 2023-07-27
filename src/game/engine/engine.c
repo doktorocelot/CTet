@@ -19,6 +19,7 @@ struct Engine {
     HoldQueue holdQueue;
     Lockdown lockdown;
     ActivePiece active;
+    bool isDead;
 };
 
 
@@ -65,6 +66,9 @@ void engine_reset(Engine *engine) {
 
     // Setup ActivePiece
     engine_spawnNewPiece(engine);
+
+    // Not dead
+    engine->isDead = false;
 }
 
 void engine_tick(Engine *engine, float deltaTime) {
@@ -117,6 +121,10 @@ Piece *engine_getHeldPiece(Engine *engine) {
 
 Lockdown *engine_getLockdown(Engine *engine) {
     return &engine->lockdown;
+}
+
+bool engine_isDead(Engine *engine) {
+    return engine->isDead;
 }
 
 void engine_onShiftRightDown(Engine *engine) {
@@ -172,7 +180,9 @@ void engine_onHoldDown(Engine *engine) {
 }
 
 void engine_spawnNewPiece(Engine *engine) {
-    activePiece_newPiece(&engine->active, nextQueue_next(&engine->nextQueue));
+    if (!activePiece_newPiece(&engine->active, nextQueue_next(&engine->nextQueue))) {
+        engine->isDead = true;
+    }
     lockdown_onPieceSpawn(&engine->lockdown, &engine->active);
 }
 

@@ -18,7 +18,7 @@ typedef enum {
     ShiftDirection_RIGHT,
 } ShiftDirection;
 
-void activePiece_newPiece(ActivePiece *active, Piece piece);
+bool activePiece_newPiece(ActivePiece *active, Piece piece);
 
 bool activePiece_shift(ActivePiece *active, ShiftDirection direction);
 

@@ -27,6 +27,8 @@ Piece *engine_getHeldPiece(Engine *engine);
 
 Lockdown *engine_getLockdown(Engine *engine);
 
+bool engine_isDead(Engine *engine);
+
 void engine_onShiftRightDown(Engine *engine);
 
 void engine_onShiftRightUp(Engine *engine);

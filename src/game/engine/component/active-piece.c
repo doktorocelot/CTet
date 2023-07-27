@@ -2,10 +2,12 @@
 #include "../data/piece-data.h"
 #include "wallkick.h"
 
-void activePiece_newPiece(ActivePiece *active, Piece piece) {
+bool activePiece_newPiece(ActivePiece *active, Piece piece) {
     active->piece = piece;
     active->pos = point_addToNew((Point) {3, 19}, pieceData_getSpawnOffset(piece.type));
     activePiece_dropOneLine(active);
+    if (activePiece_collidesWith(active, (Point) {0})) return false;
+    return true;
 }
 
 bool activePiece_shift(ActivePiece *active, ShiftDirection direction) {
