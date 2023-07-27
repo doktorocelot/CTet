@@ -104,6 +104,7 @@ void game_run(Game *game) {
                         game_makeFullscreen(game);
                         break;
                     case SDLK_r:
+                        if (game->isPaused) game->isPaused = false;
                         engine_reset(game->engine);
                         break;
                     case SDLK_ESCAPE:
