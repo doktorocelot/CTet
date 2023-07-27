@@ -71,3 +71,8 @@ static const Point PIECE_SPAWN_OFFSETS[] = {
 Point pieceData_getSpawnOffset(PieceType type) {
     return PIECE_SPAWN_OFFSETS[type];
 }
+
+
+Point pieceData_getSpawnLocation(PieceType type) {
+    return point_addToNew((Point) {3, 19}, pieceData_getSpawnOffset(type));
+}

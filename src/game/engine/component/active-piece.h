@@ -5,7 +5,6 @@
 #include "piece.h"
 #include "field.h"
 
-
 typedef struct {
     Point pos;
     Piece piece;

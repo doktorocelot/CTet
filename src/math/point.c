@@ -9,3 +9,7 @@ void point_add(Point *dest, Point addend) {
     dest->y += addend.y;
 }
 
+bool point_isEqual(Point a, Point b) {
+    return a.x == b.x && a.y == b.y;
+}
+

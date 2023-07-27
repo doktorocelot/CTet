@@ -8,6 +8,7 @@
 #include "component/gravity.h"
 #include "component/next-queue.h"
 #include "component/hold-queue.h"
+#include "data/piece-data.h"
 
 static int retryCount = 0;
 
@@ -184,6 +185,29 @@ void engine_spawnNewPiece(Engine *engine) {
         engine->isDead = true;
     }
     lockdown_onPieceSpawn(&engine->lockdown, &engine->active);
+}
+
+bool engine_placingPieceWillDie(Engine *engine) {
+    Piece nextPiece = nextQueue_peek(&engine->nextQueue);
+    Point *next = nextPiece.coords;
+    PieceType nextType = nextPiece.type;
+    Point *current_startingPtr = engine->active.piece.coords;
+    Point *current;
+    int distanceToGround = engine_getDistanceFromActivePieceToGround(engine);
+    for (int a = 0; a < BLOCKS_PER_PIECE; a++) {
+        current = current_startingPtr;
+        for (int b = 0; b < BLOCKS_PER_PIECE; b++) {
+            if (point_isEqual(
+                    (Point) {current->x + engine->active.pos.x, current->y + engine->active.pos.y - distanceToGround},
+                    point_addToNew(*next, pieceData_getSpawnLocation(nextType)))
+                    ) {
+                return true;
+            }
+            current++;
+        }
+        next++;
+    }
+    return false;
 }
 
 void engine_shiftActive(Engine *engine, ShiftDirection dir) {

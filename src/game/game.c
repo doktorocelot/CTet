@@ -89,6 +89,9 @@ void game_run(Game *game) {
 
     game->engine = engine_create();
 
+    float redAccumulator = 0;
+    bool isRed = false;
+
     while (isRunning) {
         bool isPaused = game->isPaused;
         while (SDL_PollEvent(&event)) {
@@ -162,10 +165,23 @@ void game_run(Game *game) {
             }
         }
 
+
         // sdl delta time
         Uint64 currentTime = SDL_GetTicks();
         float deltaTime = (float) currentTime - (float) previousTime;
         previousTime = currentTime;
+        if (engine_placingPieceWillDie(game->engine) && !engine_isDead(game->engine)) {
+            redAccumulator += deltaTime;
+            int redCheck = isRed ? 75 : 50;
+            if (redAccumulator > (float) redCheck) {
+                isRed ^= true;
+                redAccumulator -= (float) redCheck;
+            }
+        } else {
+            isRed = false;
+            redAccumulator = 0;
+        }
+
 
         //engine
         if (game->engine != NULL && !isPaused) {
@@ -186,9 +202,7 @@ void game_run(Game *game) {
         int drawColorStack = (int) (drawColor / 1.2);
         int drawColorGhost = (int) (drawColor / 2.2);
 
-        SDL_SetRenderDrawColor(renderer, drawColor, drawColor, drawColor, 255);
 
-        game_renderer_drawBoard(renderer);
         if (game->engine != NULL) {
             SDL_SetRenderDrawColor(renderer, drawColorStack, drawColorStack, drawColorStack, 255);
             game_renderer_drawField(renderer, engine_getFieldMatrix(game->engine));
@@ -205,7 +219,7 @@ void game_run(Game *game) {
                                                                        game->engine)});
 
             //active
-            SDL_SetRenderDrawColor(renderer, drawColorPiece, drawColorPiece, drawColorPiece, 255);
+            SDL_SetRenderDrawColor(renderer, drawColorPiece, isRed ? 0 : drawColorPiece, isRed ? 0 : drawColorPiece, 255);
             game_renderer_drawPiece(renderer, activePiece,activePiecePos);
 
             //next
@@ -225,6 +239,9 @@ void game_run(Game *game) {
                 game_renderer_drawPiece(renderer, held, point_addToNew((Point) {-5, 16}, additionalOffset));
             }
         }
+
+        SDL_SetRenderDrawColor(renderer, drawColor, isRed ? 0 : drawColor, isRed ? 0 : drawColor, 255);
+        game_renderer_drawBoard(renderer);
 
         SDL_RenderPresent(renderer);
     }
@@ -287,7 +304,6 @@ void game_renderer_drawField(SDL_Renderer *renderer, Block *matrix) {
                                });
         }
     }
-    SDL_RenderDrawRect(renderer, &(SDL_Rect) {PADDING_H, PADDING_V, CELL_SIZE * 10, CELL_SIZE * 20});
 }
 
 int game_getDrawColor(Game *game) {

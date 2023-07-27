@@ -23,6 +23,10 @@ Piece nextQueue_next(NextQueue *nextQueue) { // Todo optimize with a cycling arr
     return result;
 }
 
+Piece nextQueue_peek(NextQueue *nextQueue) {
+    return nextQueue->pieces[0];
+}
+
 void nextQueue_genNewPieceAt(NextQueue *nextQueue, int i) {
     uint64_t nextSeed = nextQueue->nextSeed;
 

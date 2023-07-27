@@ -15,3 +15,5 @@ typedef struct {
 void nextQueue_reset(NextQueue *nextQueue);
 
 Piece nextQueue_next(NextQueue *nextQueue);
+
+Piece nextQueue_peek(NextQueue *nextQueue);
