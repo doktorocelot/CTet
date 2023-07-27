@@ -204,8 +204,13 @@ void game_run(Game *game) {
 
 
         if (game->engine != NULL) {
+            //stack
             SDL_SetRenderDrawColor(renderer, drawColorStack, drawColorStack, drawColorStack, 255);
             game_renderer_drawField(renderer, engine_getFieldMatrix(game->engine));
+
+            //border
+            SDL_SetRenderDrawColor(renderer, drawColor, isRed ? 0 : drawColor, isRed ? 0 : drawColor, 255);
+            game_renderer_drawBoard(renderer);
 
 
             Point activePiecePos = *engine_getActivePiecePos(game->engine);
@@ -240,8 +245,7 @@ void game_run(Game *game) {
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, drawColor, isRed ? 0 : drawColor, isRed ? 0 : drawColor, 255);
-        game_renderer_drawBoard(renderer);
+
 
         SDL_RenderPresent(renderer);
     }
