@@ -4,7 +4,8 @@
 #include "../../../math/point.h"
 
 #define FIELD_WIDTH 10
-#define FIELD_HEIGHT 20
+#define FIELD_HEIGHT 40
+#define FIELD_NORMAL_HEIGHT 20
 
 typedef enum {
     CoordType_EMPTY,

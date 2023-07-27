@@ -49,7 +49,7 @@ Game *game_create() {
 
     CELL_SIZE = (int) (GAME_ENGINE_HEIGHT / 22.5);
     PADDING_H = (GAME_ENGINE_WIDTH - CELL_SIZE * FIELD_WIDTH) / 2;
-    PADDING_V = (GAME_ENGINE_HEIGHT - CELL_SIZE * FIELD_HEIGHT) / 2;
+    PADDING_V = (GAME_ENGINE_HEIGHT - CELL_SIZE * FIELD_NORMAL_HEIGHT) / 2;
 
     game->window = SDL_CreateWindow(
             "CTet",
@@ -256,7 +256,7 @@ void game_renderer_drawPiece(SDL_Renderer *renderer, Piece *piece, Point offset)
         SDL_RenderFillRect(renderer,
                            &(SDL_Rect) {
                                    (coords.x + offset.x) * CELL_SIZE + PADDING_H,
-                                   CELL_SIZE * 20 - (coords.y + offset.y) * CELL_SIZE + PADDING_V - CELL_SIZE,
+                                   CELL_SIZE * FIELD_NORMAL_HEIGHT - (coords.y + offset.y) * CELL_SIZE + PADDING_V - CELL_SIZE,
                                    CELL_SIZE,
                                    CELL_SIZE,
                            });
@@ -266,7 +266,7 @@ void game_renderer_drawPiece(SDL_Renderer *renderer, Piece *piece, Point offset)
 
 
 void game_renderer_drawBoard(SDL_Renderer *renderer) {
-    SDL_RenderDrawRect(renderer, &(SDL_Rect) {PADDING_H, PADDING_V, CELL_SIZE * 10, CELL_SIZE * 20});
+    SDL_RenderDrawRect(renderer, &(SDL_Rect) {PADDING_H, PADDING_V, CELL_SIZE * FIELD_WIDTH, CELL_SIZE * FIELD_NORMAL_HEIGHT});
 }
 
 void game_renderer_drawField(SDL_Renderer *renderer, Block *matrix) {
