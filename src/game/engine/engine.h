@@ -1,6 +1,7 @@
 #pragma once
 
 #include "component/piece.h"
+#include "component/lockdown.h"
 
 typedef struct Engine Engine;
 
@@ -23,6 +24,8 @@ Block *engine_getFieldMatrix(Engine *engine);
 Piece *engine_getNextPieces(Engine *engine);
 
 Piece *engine_getHeldPiece(Engine *engine);
+
+Lockdown *engine_getLockdown(Engine *engine);
 
 void engine_onShiftRightDown(Engine *engine);
 

@@ -4,7 +4,6 @@
 #include "../../../math/point.h"
 #include "piece.h"
 #include "field.h"
-#include "../engine.h"
 
 
 typedef struct {

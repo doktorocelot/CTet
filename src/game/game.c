@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <stdio.h>
 #include "game.h"
 #include "stdbool.h"
 #include "engine/component/piece.h"
@@ -173,6 +174,11 @@ void game_run(Game *game) {
         SDL_RenderClear(renderer);
 
         int drawColor = game_getDrawColor(game);
+        float range = 2.0f;
+        int drawColorPiece = (int) (
+                ((LOCK_DELAY - engine_getLockdown(game->engine)->lockDelayAcc) / (range * LOCK_DELAY) +
+                 1 / range * (range - 1)) *
+                (float) drawColor);
         int drawColorStack = (int) (drawColor / 1.2);
         int drawColorGhost = (int) (drawColor / 2.2);
 
@@ -195,10 +201,11 @@ void game_run(Game *game) {
                                                                        game->engine)});
 
             //active
-            SDL_SetRenderDrawColor(renderer, drawColor, drawColor, drawColor, 255);
-            game_renderer_drawPiece(renderer, activePiece,
-                                    activePiecePos);
+            SDL_SetRenderDrawColor(renderer, drawColorPiece, drawColorPiece, drawColorPiece, 255);
+            game_renderer_drawPiece(renderer, activePiece,activePiecePos);
+
             //next
+            SDL_SetRenderDrawColor(renderer, drawColor, drawColor, drawColor, 255);
             Piece *nextPieces = engine_getNextPieces(game->engine);
             for (int i = 0; i < NEXT_QUEUE_LENGTH; i++) {
                 Piece *piece = &nextPieces[i];
@@ -248,11 +255,12 @@ void game_renderer_drawPiece(SDL_Renderer *renderer, Piece *piece, Point offset)
         Point coords = piece->coords[i];
         SDL_RenderFillRect(renderer,
                            &(SDL_Rect) {
-                                   coords.x * CELL_SIZE + offset.x * CELL_SIZE + PADDING_H,
-                                   CELL_SIZE * 20 - coords.y * CELL_SIZE - CELL_SIZE - offset.y * CELL_SIZE + PADDING_V,
+                                   (coords.x + offset.x) * CELL_SIZE + PADDING_H,
+                                   CELL_SIZE * 20 - (coords.y + offset.y) * CELL_SIZE + PADDING_V - CELL_SIZE,
                                    CELL_SIZE,
-                                   CELL_SIZE
+                                   CELL_SIZE,
                            });
+
     }
 }
 

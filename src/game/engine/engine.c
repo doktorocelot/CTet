@@ -8,7 +8,6 @@
 #include "component/gravity.h"
 #include "component/next-queue.h"
 #include "component/hold-queue.h"
-#include "component/lockdown.h"
 
 static int retryCount = 0;
 
@@ -110,6 +109,10 @@ Piece *engine_getNextPieces(Engine *engine) {
 
 Piece *engine_getHeldPiece(Engine *engine) {
     return &engine->holdQueue.held;
+}
+
+Lockdown *engine_getLockdown(Engine *engine) {
+    return &engine->lockdown;
 }
 
 void engine_onShiftRightDown(Engine *engine) {
