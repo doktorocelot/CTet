@@ -141,6 +141,7 @@ void game_run(Game *game) {
                         break;
                     case SDLK_c:
                     case SDLK_LSHIFT:
+                        if (isPaused) break;
                         engine_onHoldDown(game->engine);
                         break;
                 }
