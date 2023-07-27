@@ -49,6 +49,6 @@ void engine_onSoftDropUp(Engine *engine);
 
 void engine_onHoldDown(Engine *engine);
 
-void engine_spawnNewPiece(Engine *engine);
+void engine_spawnNewPiece(Engine *engine, Piece piece);
 
 bool engine_placingPieceWillDie(Engine *engine);

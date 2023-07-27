@@ -66,7 +66,7 @@ void engine_reset(Engine *engine) {
     engine->lockdown = (Lockdown) {0};
 
     // Setup ActivePiece
-    engine_spawnNewPiece(engine);
+    engine_spawnNewPiece(engine, nextQueue_next(&engine->nextQueue));
 
     // Not dead
     engine->isDead = false;
@@ -152,7 +152,7 @@ void engine_onHardDrop(Engine *engine) {
 void engine_lock(Engine *engine) {
     activePiece_placeToField(&engine->active);
     holdQueue_onLock(&engine->holdQueue);
-    engine_spawnNewPiece(engine);
+    engine_spawnNewPiece(engine, nextQueue_next(&engine->nextQueue));
 }
 
 void engine_onRotateLeft(Engine *engine) {
@@ -174,14 +174,14 @@ void engine_onSoftDropUp(Engine *engine) {
 void engine_onHoldDown(Engine *engine) {
     Piece holdReturn;
     if (holdQueue_performHold(&engine->holdQueue, &holdReturn, &engine->active.piece)) {
-        if (holdReturn.type == PieceType_NONE) engine_spawnNewPiece(engine);
-        else activePiece_newPiece(&engine->active, holdReturn);
+        if (holdReturn.type == PieceType_NONE) engine_spawnNewPiece(engine, nextQueue_next(&engine->nextQueue));
+        else engine_spawnNewPiece(engine, holdReturn);
     }
 
 }
 
-void engine_spawnNewPiece(Engine *engine) {
-    if (!activePiece_newPiece(&engine->active, nextQueue_next(&engine->nextQueue))) {
+void engine_spawnNewPiece(Engine *engine, Piece piece) {
+    if (!activePiece_newPiece(&engine->active, piece)) {
         engine->isDead = true;
     }
     lockdown_onPieceSpawn(&engine->lockdown, &engine->active);
