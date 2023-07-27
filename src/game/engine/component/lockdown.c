@@ -20,3 +20,8 @@ bool lockdown_tick(Lockdown *lockdown, ActivePiece *activePiece, float deltaTime
     }
     return false;
 }
+
+void lockdown_onPieceSpawn(Lockdown *lockdown, ActivePiece *activePiece) {
+    lockdown->lockDelayAcc = 0;
+    lockdown->pieceLowestY = activePiece->pos.y;
+}

@@ -168,4 +168,5 @@ void engine_onHoldDown(Engine *engine) {
 
 void engine_spawnNewPiece(Engine *engine) {
     activePiece_newPiece(&engine->active, nextQueue_next(&engine->nextQueue));
+    lockdown_onPieceSpawn(&engine->lockdown, &engine->active);
 }
