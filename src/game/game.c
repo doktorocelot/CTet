@@ -111,7 +111,7 @@ void game_run(Game *game) {
                         engine_reset(game->engine);
                         break;
                     case SDLK_ESCAPE:
-                        if (engine_isDead(game->engine)) break;
+                        if (game->engine->isDead) break;
                         game->isPaused ^= true;
                         break;
 
@@ -170,7 +170,7 @@ void game_run(Game *game) {
         Uint64 currentTime = SDL_GetTicks();
         float deltaTime = (float) currentTime - (float) previousTime;
         previousTime = currentTime;
-        if (engine_placingPieceWillDie(game->engine) && !engine_isDead(game->engine)) {
+        if (engine_placingPieceWillDie(game->engine) && !game->engine->isDead) {
             redAccumulator += deltaTime;
             int redCheck = isRed ? 75 : 50;
             if (redAccumulator > (float) redCheck) {
@@ -186,7 +186,7 @@ void game_run(Game *game) {
         //engine
         if (game->engine != NULL && !isPaused) {
             engine_tick(game->engine, deltaTime);
-            if (engine_isDead(game->engine)) game->isPaused = true;
+            if (game->engine->isDead) game->isPaused = true;
         }
 
         // draw

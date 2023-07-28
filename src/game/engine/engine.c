@@ -61,7 +61,7 @@ void engine_tick(Engine *engine, float deltaTime) {
     int autoshiftResult;
     while (autoshiftResult = autoshift_tick(&engine->autoshiftVars, deltaTime), autoshiftResult) {
         activePiece_shift(&engine->active, autoshiftResult);
-    };
+    }
 
     int gravityResult;
     while (gravityResult = gravity_tick(&engine->gravity, &engine->active, deltaTime), gravityResult) {
