@@ -209,7 +209,7 @@ void game_run(Game *game) {
             game_renderer_drawField(renderer, engine_getFieldMatrix(game->engine));
 
             //border
-            SDL_SetRenderDrawColor(renderer, drawColor, isRed ? 0 : drawColor, isRed ? 0 : drawColor, 255);
+            SDL_SetRenderDrawColor(renderer, drawColor, isRed ? 100 : drawColor, isRed ? 100 : drawColor, 255);
             game_renderer_drawBoard(renderer);
 
 
@@ -224,7 +224,7 @@ void game_run(Game *game) {
                                                                        game->engine)});
 
             //active
-            SDL_SetRenderDrawColor(renderer, drawColorPiece, isRed ? 0 : drawColorPiece, isRed ? 0 : drawColorPiece, 255);
+            SDL_SetRenderDrawColor(renderer, drawColorPiece, isRed ? (int) (drawColorPiece * 0.5) : drawColorPiece, isRed ? (int) (drawColorPiece * 0.5) : drawColorPiece, 255);
             game_renderer_drawPiece(renderer, activePiece,activePiecePos);
 
             //next
