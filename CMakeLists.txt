@@ -32,7 +32,7 @@ set(SOURCES
         src/game/game.h src/game/game.c
 
         src/game/engine/engine.h src/game/engine/engine.c
-        src/game/engine/renderer.h src/game/engine/renderer.c
+        src/game/engine/rendering.h src/game/engine/rendering.c
 
         src/game/engine/data/piece-data.h src/game/engine/data/piece-data.c
 
