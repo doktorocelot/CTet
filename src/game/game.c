@@ -196,7 +196,7 @@ void game_run(Game *game) {
         int drawColor = game_getDrawColor(game);
         float range = 2.0f;
         int drawColorPiece = (int) (
-                ((LOCK_DELAY - engine_getLockdown(game->engine)->lockDelayAcc) / (range * LOCK_DELAY) +
+                ((LOCK_DELAY - game->engine->lockdown.lockDelayAcc) / (range * LOCK_DELAY) +
                  1 / range * (range - 1)) *
                 (float) drawColor);
         int drawColorStack = (int) (drawColor / 1.2);
@@ -206,22 +206,20 @@ void game_run(Game *game) {
         if (game->engine != NULL) {
             //stack
             SDL_SetRenderDrawColor(renderer, drawColorStack, drawColorStack, drawColorStack, 255);
-            game_renderer_drawField(renderer, engine_getFieldMatrix(game->engine));
+            game_renderer_drawField(renderer, (Block *) game->engine->field.matrix);
 
             //border
             SDL_SetRenderDrawColor(renderer, drawColor, isRed ? 100 : drawColor, isRed ? 100 : drawColor, 255);
             game_renderer_drawBoard(renderer);
 
 
-            Point activePiecePos = *engine_getActivePiecePos(game->engine);
-            Piece *activePiece = engine_getActivePiece(game->engine);
+            Point activePiecePos = game->engine->active.pos;
+            Piece *activePiece = &game->engine->active.piece;
 
             //ghost
             SDL_SetRenderDrawColor(renderer, drawColorGhost, drawColorGhost, drawColorGhost, 255);
             game_renderer_drawPiece(renderer, activePiece,
-                                    (Point) {activePiecePos.x, activePiecePos.y -
-                                                               engine_getDistanceFromActivePieceToGround(
-                                                                       game->engine)});
+                                    (Point) {activePiecePos.x, activePiecePos.y - activePiece_getDistanceToGround(&game->engine->active)});
 
             //active
             SDL_SetRenderDrawColor(renderer, drawColorPiece, isRed ? (int) (drawColorPiece * 0.5) : drawColorPiece, isRed ? (int) (drawColorPiece * 0.5) : drawColorPiece, 255);
@@ -229,7 +227,7 @@ void game_run(Game *game) {
 
             //next
             SDL_SetRenderDrawColor(renderer, drawColor, drawColor, drawColor, 255);
-            Piece *nextPieces = engine_getNextPieces(game->engine);
+            Piece *nextPieces = game->engine->nextQueue.pieces;
             for (int i = 0; i < NEXT_QUEUE_LENGTH; i++) {
                 Piece *piece = &nextPieces[i];
                 Point additionalOffset = getPieceQueueOffset(piece);
@@ -237,7 +235,7 @@ void game_run(Game *game) {
             }
 
             //held
-            Piece *held = engine_getHeldPiece(game->engine);
+            Piece *held = &game->engine->holdQueue.held;
             if (held->type != PieceType_NONE) {
                 piece_resetOrientation(held);
                 Point additionalOffset = getPieceQueueOffset(held);

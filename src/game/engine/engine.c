@@ -4,25 +4,9 @@
 #include "engine.h"
 #include "component/active-piece.h"
 #include "../../math/prng.h"
-#include "component/autoshift.h"
-#include "component/gravity.h"
-#include "component/next-queue.h"
-#include "component/hold-queue.h"
 #include "data/piece-data.h"
 
 static int retryCount = 0;
-
-struct Engine {
-    Field field;
-    AutoshiftVars autoshiftVars;
-    Gravity gravity;
-    NextQueue nextQueue;
-    HoldQueue holdQueue;
-    Lockdown lockdown;
-    ActivePiece active;
-    bool isDead;
-};
-
 
 static void engine_lock(Engine *engine);
 

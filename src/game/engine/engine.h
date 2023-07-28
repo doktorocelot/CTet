@@ -2,8 +2,21 @@
 
 #include "component/piece.h"
 #include "component/lockdown.h"
+#include "component/hold-queue.h"
+#include "component/next-queue.h"
+#include "component/gravity.h"
+#include "component/autoshift.h"
 
-typedef struct Engine Engine;
+typedef struct {
+    Field field;
+    AutoshiftVars autoshiftVars;
+    Gravity gravity;
+    NextQueue nextQueue;
+    HoldQueue holdQueue;
+    Lockdown lockdown;
+    ActivePiece active;
+    bool isDead;
+} Engine;
 
 Engine *engine_create();
 
@@ -12,22 +25,6 @@ void engine_destroy(Engine *engine);
 void engine_reset(Engine *engine);
 
 void engine_tick(Engine *engine, float deltaTime);
-
-Piece *engine_getActivePiece(Engine *engine);
-
-Point *engine_getActivePiecePos(Engine *engine);
-
-int engine_getDistanceFromActivePieceToGround(Engine *engine);
-
-Block *engine_getFieldMatrix(Engine *engine);
-
-Piece *engine_getNextPieces(Engine *engine);
-
-Piece *engine_getHeldPiece(Engine *engine);
-
-Lockdown *engine_getLockdown(Engine *engine);
-
-bool engine_isDead(Engine *engine);
 
 void engine_onShiftRightDown(Engine *engine);
 
