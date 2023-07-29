@@ -1,11 +1,8 @@
 #include <SDL.h>
-#include <stdio.h>
 #include "game.h"
 #include "stdbool.h"
-#include "engine/component/piece.h"
 #include "engine/engine.h"
-#include "engine/component/field.h"
-#include "engine/component/next-queue.h"
+#include "engine/rendering.h"
 
 //temp until custom controls
 #ifdef OCELOT_CONTROLS
@@ -18,38 +15,20 @@ struct Game {
     SDL_Window *window;
     SDL_Renderer *sdlRenderer;
     Engine *engine;
+    Rendering rendering;
     bool isPaused;
 };
 
-#define GAME_ENGINE_WIDTH 720
-#define GAME_ENGINE_HEIGHT 720
 
-static int CELL_SIZE;
-static int PADDING_H;
-static int PADDING_V;
 
 static void game_setupRenderer(Game *game);
 
 static void game_makeFullscreen(Game *game);
 
-static void game_renderer_drawPiece(SDL_Renderer *renderer, Piece *piece, Point offset);
-
-static void game_renderer_drawBoard(SDL_Renderer *renderer);
-
-static void game_renderer_drawField(SDL_Renderer *renderer, Block *matrix);
-
-static int game_getDrawColor(Game *game);
-
-Point getPieceQueueOffset(const Piece *piece);
-
 Game *game_create() {
     Game *game = malloc(sizeof(Game));
 
     SDL_Init(SDL_INIT_VIDEO);
-
-    CELL_SIZE = (int) (GAME_ENGINE_HEIGHT / 22.5);
-    PADDING_H = (GAME_ENGINE_WIDTH - CELL_SIZE * FIELD_WIDTH) / 2;
-    PADDING_V = (GAME_ENGINE_HEIGHT - CELL_SIZE * FIELD_NORMAL_HEIGHT) / 2;
 
     game->window = SDL_CreateWindow(
             "CTet",
@@ -62,6 +41,8 @@ Game *game_create() {
             SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     game->engine = NULL;
+
+    game->rendering = (Rendering) {0};
 
     game->isPaused = false;
 
@@ -166,101 +147,32 @@ void game_run(Game *game) {
         }
 
 
-        // sdl delta time
+        // CALCULATE DELTA
         Uint64 currentTime = SDL_GetTicks();
         float deltaTime = (float) currentTime - (float) previousTime;
         previousTime = currentTime;
-        if (engine_placingPieceWillDie(game->engine) && !game->engine->isDead) {
-            redAccumulator += deltaTime;
-            int redCheck = isRed ? 75 : 50;
-            if (redAccumulator > (float) redCheck) {
-                isRed ^= true;
-                redAccumulator -= (float) redCheck;
-            }
-        } else {
-            isRed = false;
-            redAccumulator = 0;
-        }
 
-
-        //engine
+        // RUN ENGINE
         if (game->engine != NULL && !isPaused) {
             engine_tick(game->engine, deltaTime);
             if (game->engine->isDead) game->isPaused = true;
         }
 
-        // draw
+        // DRAW GAME
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        int drawColor = game_getDrawColor(game);
-        float range = 2.0f;
-        int drawColorPiece = (int) (
-                ((LOCK_DELAY - game->engine->lockdown.lockDelayAcc) / (range * LOCK_DELAY) +
-                 1 / range * (range - 1)) *
-                (float) drawColor);
-        int drawColorStack = (int) (drawColor / 1.2);
-        int drawColorGhost = (int) (drawColor / 2.2);
-
+        rendering_tick(&game->rendering, deltaTime);
 
         if (game->engine != NULL) {
-            //stack
-            SDL_SetRenderDrawColor(renderer, drawColorStack, drawColorStack, drawColorStack, 255);
-            game_renderer_drawField(renderer, (Block *) game->engine->field.matrix);
-
-            //border
-            SDL_SetRenderDrawColor(renderer, drawColor, isRed ? 100 : drawColor, isRed ? 100 : drawColor, 255);
-            game_renderer_drawBoard(renderer);
-
-
-            Point activePiecePos = game->engine->active.pos;
-            Piece *activePiece = &game->engine->active.piece;
-
-            //ghost
-            SDL_SetRenderDrawColor(renderer, drawColorGhost, drawColorGhost, drawColorGhost, 255);
-            game_renderer_drawPiece(renderer, activePiece,
-                                    (Point) {activePiecePos.x, activePiecePos.y - activePiece_getDistanceToGround(&game->engine->active)});
-
-            //active
-            SDL_SetRenderDrawColor(renderer, drawColorPiece, isRed ? (int) (drawColorPiece * 0.5) : drawColorPiece, isRed ? (int) (drawColorPiece * 0.5) : drawColorPiece, 255);
-            game_renderer_drawPiece(renderer, activePiece,activePiecePos);
-
-            //next
-            SDL_SetRenderDrawColor(renderer, drawColor, drawColor, drawColor, 255);
-            Piece *nextPieces = game->engine->nextQueue.pieces;
-            for (int i = 0; i < NEXT_QUEUE_LENGTH; i++) {
-                Piece *piece = &nextPieces[i];
-                Point additionalOffset = getPieceQueueOffset(piece);
-                game_renderer_drawPiece(renderer, piece, point_addToNew((Point) {11, 16 - i * 4}, additionalOffset));
-            }
-
-            //held
-            Piece *held = &game->engine->holdQueue.held;
-            if (held->type != PieceType_NONE) {
-                piece_resetOrientation(held);
-                Point additionalOffset = getPieceQueueOffset(held);
-                game_renderer_drawPiece(renderer, held, point_addToNew((Point) {-5, 16}, additionalOffset));
-            }
+            rendering_drawEngineInSdl(&game->rendering, renderer, game->engine, game->isPaused);
         }
 
-
-
+        // SWAP BUFFERS
         SDL_RenderPresent(renderer);
     }
 }
 
-Point getPieceQueueOffset(const Piece *piece) {
-    Point additionalOffset;
-    switch (piece->type) {
-        case PieceType_O:
-            additionalOffset = (Point) {1, 1};
-            break;
-        default:
-            additionalOffset = (Point) {0};
-            break;
-    }
-    return additionalOffset;
-}
 
 void game_makeFullscreen(Game *game) {
     Uint32 fullscreenFlag = SDL_GetWindowFlags(game->window) & SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -273,41 +185,4 @@ void game_setupRenderer(Game *game) {
     SDL_RenderSetLogicalSize(renderer, GAME_ENGINE_WIDTH, GAME_ENGINE_HEIGHT);
 }
 
-void game_renderer_drawPiece(SDL_Renderer *renderer, Piece *piece, Point offset) {
-    for (int i = 0; i < 4; i++) {
-        Point coords = piece->coords[i];
-        SDL_RenderFillRect(renderer,
-                           &(SDL_Rect) {
-                                   (coords.x + offset.x) * CELL_SIZE + PADDING_H,
-                                   CELL_SIZE * FIELD_NORMAL_HEIGHT - (coords.y + offset.y) * CELL_SIZE + PADDING_V - CELL_SIZE,
-                                   CELL_SIZE,
-                                   CELL_SIZE,
-                           });
 
-    }
-}
-
-
-void game_renderer_drawBoard(SDL_Renderer *renderer) {
-    SDL_RenderDrawRect(renderer, &(SDL_Rect) {PADDING_H, PADDING_V, CELL_SIZE * FIELD_WIDTH, CELL_SIZE * FIELD_NORMAL_HEIGHT});
-}
-
-void game_renderer_drawField(SDL_Renderer *renderer, Block *matrix) {
-    for (int y = 0; y < FIELD_HEIGHT; y++) {
-        for (int x = 0; x < FIELD_WIDTH; x++) {
-            int index = FIELD_WIDTH * y + x;
-            if (matrix[index].color <= BlockColor_NONE) continue;
-            SDL_RenderFillRect(renderer,
-                               &(SDL_Rect) {
-                                       x * CELL_SIZE + PADDING_H,
-                                       CELL_SIZE * 20 - y * CELL_SIZE - CELL_SIZE + PADDING_V,
-                                       CELL_SIZE,
-                                       CELL_SIZE
-                               });
-        }
-    }
-}
-
-int game_getDrawColor(Game *game) {
-    return game->isPaused ? 150 : 255;
-}
