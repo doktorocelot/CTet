@@ -2,10 +2,12 @@
 
 #define COLOR_FLAG_CRITICAL_DANGER (1 << 0)
 #define COLOR_FLAG_RED_FLASH_ON (1 << 1)
+#define COLOR_FLAG_HOLD_IS_LOCKED (1 << 2)
 
 #define RED_FLASH_LIMIT 75
 
 #define DANGER_MULTIPLIER 0.5
+#define HOLD_LOCKED_MULTIPLIER 0.4
 
 typedef enum {
     DrawType_PIECE,
@@ -60,6 +62,7 @@ void rendering_drawEngineInSdl(Rendering *vars, SDL_Renderer *renderer, Engine *
     int colorFlags = 0;
     colorFlags |= COLOR_FLAG_CRITICAL_DANGER * engine_placingPieceWillDie(engine);
     colorFlags |= COLOR_FLAG_RED_FLASH_ON * (vars->redFlashOn && !isPaused);
+    colorFlags |= COLOR_FLAG_HOLD_IS_LOCKED * holdQueue_isLocked(&engine->holdQueue);
 
     // FIELD
     rendering_setSdlDrawColor(renderer, DrawType_FIELD, colorFlags);
@@ -159,6 +162,9 @@ Point getPieceQueueOffset(const Piece *piece) {
 
 void rendering_setSdlDrawColor(SDL_Renderer *renderer, DrawType type, int colorFlags) {
     int colorValue = COLOR_VALUE_LUT[type];
+    if (colorFlags & COLOR_FLAG_HOLD_IS_LOCKED && type == DrawType_HOLD) {
+        colorValue = (int) (colorValue * HOLD_LOCKED_MULTIPLIER);
+    }
     int r = colorValue;
     int g = colorValue;
     int b = colorValue;
