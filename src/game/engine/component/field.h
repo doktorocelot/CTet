@@ -7,6 +7,7 @@
 #define FIELD_HEIGHT 40
 #define FIELD_NORMAL_HEIGHT 20
 
+#define HIT_LIST_END (-1)
 typedef enum {
     CoordType_EMPTY,
     CoordType_OCCUPIED,

@@ -46,20 +46,20 @@ void field_getFullRowHitList(Field *field, int *hitList) {
             if (field_getBlockAt(field, (Point) {x, y}).color <= BlockColor_NONE) break;
         }
     }
-    hitList[hitListIndex] = 0xFF;
+    hitList[hitListIndex] = HIT_LIST_END;
 }
 
 static void field_killRow(Field *field, int row);
 
 void field_killHitList(Field *field, const int *hitList) {
-    for (int i = 0; hitList[i] != 0xFF && i <= FIELD_HEIGHT; i++) {
+    for (int i = 0; hitList[i] != HIT_LIST_END && i <= FIELD_HEIGHT; i++) {
         field_killRow(field, hitList[i]);
     }
 }
 
 void field_collapseHitList(Field *field, const int *hitList) {
     int rowToKill;
-    for (int i = 0; rowToKill = hitList[i], rowToKill != 0xFF && i <= FIELD_HEIGHT; i++) {
+    for (int i = 0; rowToKill = hitList[i], rowToKill != HIT_LIST_END && i <= FIELD_HEIGHT; i++) {
         memmove(
                 field->matrix[rowToKill],
                 field->matrix[rowToKill + 1],
