@@ -75,38 +75,6 @@ void engine_tick(Engine *engine, float deltaTime) {
     }
 }
 
-Piece *engine_getActivePiece(Engine *engine) {
-    return &engine->active.piece;
-}
-
-Point *engine_getActivePiecePos(Engine *engine) {
-    return &engine->active.pos;
-}
-
-int engine_getDistanceFromActivePieceToGround(Engine *engine) {
-    return activePiece_getDistanceToGround(&engine->active);
-}
-
-Block *engine_getFieldMatrix(Engine *engine) {
-    return (Block *) engine->field.matrix;
-}
-
-Piece *engine_getNextPieces(Engine *engine) {
-    return (Piece *) engine->nextQueue.pieces;
-}
-
-Piece *engine_getHeldPiece(Engine *engine) {
-    return &engine->holdQueue.held;
-}
-
-Lockdown *engine_getLockdown(Engine *engine) {
-    return &engine->lockdown;
-}
-
-bool engine_isDead(Engine *engine) {
-    return engine->isDead;
-}
-
 void engine_onShiftRightDown(Engine *engine) {
     engine_shiftActive(engine, ShiftDirection_RIGHT);
     autoshift_onPress(&engine->autoshiftVars, ShiftDirection_RIGHT);
@@ -180,7 +148,7 @@ bool engine_placingPieceWillDie(Engine *engine) {
     PieceType nextType = nextPiece.type;
     Point *current_startingPtr = engine->active.piece.coords;
     Point *current;
-    int distanceToGround = engine_getDistanceFromActivePieceToGround(engine);
+    int distanceToGround = activePiece_getDistanceToGround(&engine->active);
     for (int a = 0; a < BLOCKS_PER_PIECE; a++) {
         current = current_startingPtr;
         for (int b = 0; b < BLOCKS_PER_PIECE; b++) {
