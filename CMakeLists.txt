@@ -48,10 +48,18 @@ set(SOURCES
         src/game/engine/component/wallkick.h src/game/engine/component/wallkick.c
         )
 
-if (WIN32 AND NOT USE_WIN_CONSOLE)
-    add_executable(CTet WIN32 ${SOURCES})
+if (WIN32)
+    if (USE_WIN_CONSOLE)
+        add_executable(CTet ${SOURCES} icon.rc)
+    else ()
+        add_executable(CTet WIN32 ${SOURCES} icon.rc)
+    endif ()
 else ()
     add_executable(CTet ${SOURCES})
+endif ()
+
+if (WIN32)
+
 endif ()
 
 target_include_directories(CTet PUBLIC lib/SDL-release-2.28.1/include)
