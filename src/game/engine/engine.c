@@ -73,11 +73,6 @@ void engine_tick(Engine *engine, float deltaTime) {
     if (lockdown_tick(&engine->lockdown, &engine->active, deltaTime)) {
         engine_lock(engine);
     }
-
-    int hitList[FIELD_HEIGHT + 1];
-    field_getFullRowHitList(&engine->field, hitList);
-    field_killHitList(&engine->field, hitList);
-    field_collapseHitList(&engine->field, hitList);
 }
 
 Piece *engine_getActivePiece(Engine *engine) {
@@ -136,6 +131,12 @@ void engine_onHardDrop(Engine *engine) {
 void engine_lock(Engine *engine) {
     activePiece_placeToField(&engine->active);
     holdQueue_onLock(&engine->holdQueue);
+
+    int hitList[FIELD_HEIGHT + 1];
+    field_getFullRowHitList(&engine->field, hitList);
+    field_killHitList(&engine->field, hitList);
+    field_collapseHitList(&engine->field, hitList);
+
     engine_spawnNewPiece(engine, nextQueue_next(&engine->nextQueue));
 }
 
