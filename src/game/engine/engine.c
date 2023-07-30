@@ -60,7 +60,7 @@ void engine_tick(Engine *engine, float deltaTime) {
 
     int autoshiftResult;
     while (autoshiftResult = autoshift_tick(&engine->autoshiftVars, deltaTime), autoshiftResult) {
-        activePiece_shift(&engine->active, autoshiftResult);
+        engine_shiftActive(engine, autoshiftResult);
     }
 
     int gravityResult;
@@ -109,6 +109,7 @@ bool engine_isDead(Engine *engine) {
 
 void engine_onShiftRightDown(Engine *engine) {
     engine_shiftActive(engine, ShiftDirection_RIGHT);
+    autoshift_onPress(&engine->autoshiftVars, ShiftDirection_RIGHT);
 }
 
 void engine_onShiftRightUp(Engine *engine) {
@@ -117,6 +118,7 @@ void engine_onShiftRightUp(Engine *engine) {
 
 void engine_onShiftLeftDown(Engine *engine) {
     engine_shiftActive(engine, ShiftDirection_LEFT);
+    autoshift_onPress(&engine->autoshiftVars, ShiftDirection_LEFT);
 }
 
 void engine_onShiftLeftUp(Engine *engine) {
@@ -196,10 +198,9 @@ bool engine_placingPieceWillDie(Engine *engine) {
 }
 
 void engine_shiftActive(Engine *engine, ShiftDirection dir) {
-    if (activePiece_shift(&engine->active, (dir))) {
+    if (activePiece_shift(&engine->active, dir)) {
         lockdown_onPieceManipulate(&engine->lockdown);
     }
-    autoshift_onPress(&engine->autoshiftVars, (dir));
 }
 
 void engine_rotateActive(Engine *engine, int amount) {
