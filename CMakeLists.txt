@@ -46,16 +46,22 @@ set(SOURCES
         src/game/engine/component/hold-queue.h src/game/engine/component/hold-queue.c
         src/game/engine/component/lockdown.h src/game/engine/component/lockdown.c
         src/game/engine/component/wallkick.h src/game/engine/component/wallkick.c
+
+        src/platform/window.h
+        )
+
+set(PLATFORM_SOURCES
+        src/platform/platform-win/window-win.c
         )
 
 if (WIN32)
     if (USE_WIN_CONSOLE)
-        add_executable(CTet ${SOURCES} icon.rc)
+        add_executable(CTet ${SOURCES} ${PLATFORM_SOURCES} icon.rc)
     else ()
-        add_executable(CTet WIN32 ${SOURCES} icon.rc)
+        add_executable(CTet WIN32 ${SOURCES} ${PLATFORM_SOURCES} icon.rc)
     endif ()
 else ()
-    add_executable(CTet ${SOURCES})
+    add_executable(CTet ${SOURCES} ${PLATFORM_SOURCES})
 endif ()
 
 if (WIN32)

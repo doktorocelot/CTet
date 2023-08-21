@@ -1,5 +1,7 @@
 #define SDL_MAIN_HANDLED
 
+#include "platform/window.h"
+
 #include "game/game.h"
 
 #ifdef __WIN32__
@@ -18,9 +20,14 @@
     int main(int argc, char *argv[]) {
 #endif
 
-    Game *game = game_create();
-    game_run(game);
-    game_destroy(game);
+        Window *window = window_create();
+        window_show(window);
+        window_loop(window);
+        window_destroy(window);
+
+//    Game *game = game_create();
+//    game_run(game);
+//    game_destroy(game);
 
     return 0;
 }
