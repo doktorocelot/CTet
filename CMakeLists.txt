@@ -1,16 +1,9 @@
 cmake_minimum_required(VERSION 3.25)
 
-option(USE_WIN_CONSOLE OFF)
-if (USE_WIN_CONSOLE)
-    add_compile_definitions(USE_WIN_CONSOLE)
-endif ()
-option(OCELOT_CONTROLS OFF)
-if (OCELOT_CONTROLS)
-    add_compile_definitions(OCELOT_CONTROLS)
-endif ()
-
 project(CTet C)
 set(CMAKE_C_STANDARD 11)
+
+enable_language(CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -19,12 +12,11 @@ set(__WIN32__ ON)
 if (WIN32)
     add_definitions(-D__WIN32__)
 endif ()
-add_subdirectory(extern/SDL)
 
+add_subdirectory(extern/SDL)
+add_subdirectory(src/platform/gfx/directx)
 
 set(SOURCES
-        src/main.c
-
         src/math/quick-math.h
         src/math/point.h src/math/point.c
         src/math/prng.h src/math/prng.c
@@ -48,25 +40,22 @@ set(SOURCES
         src/game/engine/component/wallkick.h src/game/engine/component/wallkick.c
 
         src/platform/window.h
+        src/platform/log.h
         )
 
 set(PLATFORM_SOURCES
+        src/platform/platform-win/main-win.c
+        
         src/platform/platform-win/window-win.c
-        )
+        src/platform/platform-win/log-win.c
+        src/platform/gfx/directx/directx-renderer.cpp
+)
 
 if (WIN32)
-    if (USE_WIN_CONSOLE)
-        add_executable(CTet ${SOURCES} ${PLATFORM_SOURCES} icon.rc)
-    else ()
-        add_executable(CTet WIN32 ${SOURCES} ${PLATFORM_SOURCES} icon.rc)
-    endif ()
-else ()
-    add_executable(CTet ${SOURCES} ${PLATFORM_SOURCES})
-endif ()
-
-if (WIN32)
-
+    add_executable(CTet WIN32 ${SOURCES} ${PLATFORM_SOURCES} icon.rc)
 endif ()
 
 target_include_directories(CTet PUBLIC lib/SDL-release-2.28.1/include)
 target_link_libraries(CTet PUBLIC SDL2)
+target_link_libraries(CTet PUBLIC CTetDirectX)
+target_link_libraries(CTet PUBLIC d3d11.lib dxguid.lib)

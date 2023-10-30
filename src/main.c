@@ -6,7 +6,8 @@
 
 #ifdef __WIN32__
 
-#include "windows.h"
+#include <windows.h>
+#include <ctetdx.h>
 
 #endif
 
@@ -19,6 +20,8 @@
 #else
     int main(int argc, char *argv[]) {
 #endif
+        
+        
 
         Window *window = window_create();
         window_show(window);
