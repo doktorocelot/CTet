@@ -1,5 +1,5 @@
-#include "piece.h"
-#include "../data/piece-data.h"
+#include <ctet/piece.h>
+#include <ctet/piece-data.h>
 
 #define DEFAULT_ORIENTATION Orientation_UP
 

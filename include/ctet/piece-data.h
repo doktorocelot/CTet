@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../component/piece.h"
-#include "../../../math/point.h"
+#include "piece.h"
+#include "point.h"
 
 // Returns a pointer to the first coords (of four) of a certain piece type and orientation
 Point *pieceData_getCoords(PieceType type, Orientation orientation);

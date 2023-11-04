@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdbool.h>
-#include "../../../math/point.h"
+#include "point.h"
 #include "piece.h"
 #include "field.h"
 

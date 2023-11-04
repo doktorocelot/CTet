@@ -1,4 +1,4 @@
-#include "hold-queue.h"
+#include <ctet/hold-queue.h>
 
 void holdQueue_reset(HoldQueue *holdQueue) {
     holdQueue->held = (Piece) {.type = PieceType_NONE};

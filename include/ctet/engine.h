@@ -1,11 +1,11 @@
 #pragma once
 
-#include "component/piece.h"
-#include "component/lockdown.h"
-#include "component/hold-queue.h"
-#include "component/next-queue.h"
-#include "component/gravity.h"
-#include "component/autoshift.h"
+#include "piece.h"
+#include "lockdown.h"
+#include "hold-queue.h"
+#include "next-queue.h"
+#include "gravity.h"
+#include "autoshift.h"
 
 typedef struct {
     Field field;

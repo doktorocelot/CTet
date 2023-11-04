@@ -5,28 +5,26 @@ set(CMAKE_C_STANDARD 11)
 
 set(SOURCES
         src/math/quick-math.h
-        src/math/point.h src/math/point.c
-        src/math/prng.h src/math/prng.c
+        include/ctet/point.h src/math/point.c
+        include/ctet/prng.h src/math/prng.c
 
-        src/game/game.h src/game/game.c
+        include/ctet/engine.h src/game/engine/engine.c
 
-        src/game/engine/engine.h src/game/engine/engine.c
+        include/ctet/piece-data.h src/game/engine/data/piece-data.c
 
-        src/game/engine/data/piece-data.h src/game/engine/data/piece-data.c
-
-        src/game/engine/component/block.h src/game/engine/component/block.c
-        src/game/engine/component/piece.h src/game/engine/component/piece.c
-        src/game/engine/component/active-piece.h src/game/engine/component/active-piece.c
-        src/game/engine/component/field.h src/game/engine/component/field.c
-        src/game/engine/component/autoshift.h src/game/engine/component/autoshift.c
-        src/game/engine/component/gravity.h src/game/engine/component/gravity.c
-        src/game/engine/component/next-queue.h src/game/engine/component/next-queue.c
-        src/game/engine/component/hold-queue.h src/game/engine/component/hold-queue.c
-        src/game/engine/component/lockdown.h src/game/engine/component/lockdown.c
-        src/game/engine/component/wallkick.h src/game/engine/component/wallkick.c
+        include/ctet/block.h src/game/engine/component/block.c
+        include/ctet/piece.h src/game/engine/component/piece.c
+        include/ctet/active-piece.h src/game/engine/component/active-piece.c
+        include/ctet/field.h src/game/engine/component/field.c
+        include/ctet/autoshift.h src/game/engine/component/autoshift.c
+        include/ctet/gravity.h src/game/engine/component/gravity.c
+        include/ctet/next-queue.h src/game/engine/component/next-queue.c
+        include/ctet/hold-queue.h src/game/engine/component/hold-queue.c
+        include/ctet/lockdown.h src/game/engine/component/lockdown.c
+        include/ctet/wallkick.h src/game/engine/component/wallkick.c
 )
 
 
 add_library(CTet ${SOURCES})
-
+target_include_directories(CTet PUBLIC ${PROJECT_SOURCE_DIR}/include)
 

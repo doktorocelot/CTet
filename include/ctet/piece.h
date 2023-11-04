@@ -1,7 +1,7 @@
 #pragma once
 
 #include "block.h"
-#include "../../../math/point.h"
+#include "point.h"
 
 #define BLOCKS_PER_PIECE 4
 

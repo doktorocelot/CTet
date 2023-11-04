@@ -1,4 +1,4 @@
-#include "autoshift.h"
+#include <ctet/autoshift.h>
 
 #define AUTOSHIFT_DELAY 200
 #define AUTOSHIFT_RATE 33

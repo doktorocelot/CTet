@@ -1,10 +1,9 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <time.h>
-#include "engine.h"
-#include "component/active-piece.h"
-#include "../../math/prng.h"
-#include "data/piece-data.h"
+#include <ctet/engine.h>
+#include <ctet/prng.h>
+#include <ctet/piece-data.h>
 
 static int retryCount = 0;
 

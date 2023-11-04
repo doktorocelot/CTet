@@ -1,6 +1,6 @@
-#include "active-piece.h"
-#include "../data/piece-data.h"
-#include "wallkick.h"
+#include <ctet/active-piece.h>
+#include <ctet/piece-data.h>
+#include <ctet/wallkick.h>
 
 bool activePiece_newPiece(ActivePiece *active, Piece piece) {
     active->piece = piece;

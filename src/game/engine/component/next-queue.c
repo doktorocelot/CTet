@@ -1,6 +1,6 @@
 #include <memory.h>
-#include "next-queue.h"
-#include "../../../math/prng.h"
+#include <ctet/next-queue.h>
+#include <ctet/prng.h>
 
 void nextQueue_genNewPieceAt(NextQueue *nextQueue, int i);
 

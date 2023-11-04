@@ -1,4 +1,4 @@
-#include "lockdown.h"
+#include <ctet/lockdown.h>
 #include "../../../math/quick-math.h"
 
 static void lockdown_resetVars(Lockdown *lockdown);

@@ -1,4 +1,4 @@
-#include "gravity.h"
+#include <ctet/gravity.h>
 
 int gravity_tick(Gravity *gravity, ActivePiece *activePiece, float deltaTime) {
     if (activePiece_collidesWith(activePiece, (Point) {0, -1})) {

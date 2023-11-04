@@ -1,7 +1,7 @@
 #pragma once
 
 #include "block.h"
-#include "../../../math/point.h"
+#include "point.h"
 
 #define FIELD_WIDTH 10
 #define FIELD_HEIGHT 40

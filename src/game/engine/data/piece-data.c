@@ -1,4 +1,4 @@
-#include "piece-data.h"
+#include <ctet/piece-data.h>
 
 static const Point PIECE_DATA[7][4][4] = {
         // I
