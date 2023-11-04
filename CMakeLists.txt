@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(libctet C)
+project(CTet C)
 set(CMAKE_C_STANDARD 11)
 
 set(SOURCES
@@ -27,6 +27,6 @@ set(SOURCES
 )
 
 
-add_library(libctet ${SOURCES})
+add_library(CTet ${SOURCES})
 
 
