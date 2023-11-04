@@ -1,20 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(CTet C)
+project(libctet C)
 set(CMAKE_C_STANDARD 11)
-
-enable_language(CXX)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-set(BUILD_SHARED_LIBS ON)
-set(__WIN32__ ON)
-if (WIN32)
-    add_definitions(-D__WIN32__)
-endif ()
-
-add_subdirectory(extern/SDL)
-add_subdirectory(src/platform/gfx/directx)
 
 set(SOURCES
         src/math/quick-math.h
@@ -24,7 +11,6 @@ set(SOURCES
         src/game/game.h src/game/game.c
 
         src/game/engine/engine.h src/game/engine/engine.c
-        src/game/engine/rendering.h src/game/engine/rendering.c
 
         src/game/engine/data/piece-data.h src/game/engine/data/piece-data.c
 
@@ -38,24 +24,9 @@ set(SOURCES
         src/game/engine/component/hold-queue.h src/game/engine/component/hold-queue.c
         src/game/engine/component/lockdown.h src/game/engine/component/lockdown.c
         src/game/engine/component/wallkick.h src/game/engine/component/wallkick.c
-
-        src/platform/window.h
-        src/platform/log.h
-        )
-
-set(PLATFORM_SOURCES
-        src/platform/platform-win/main-win.c
-        
-        src/platform/platform-win/window-win.c
-        src/platform/platform-win/log-win.c
-        src/platform/gfx/directx/directx-renderer.cpp
 )
 
-if (WIN32)
-    add_executable(CTet WIN32 ${SOURCES} ${PLATFORM_SOURCES} icon.rc)
-endif ()
 
-target_include_directories(CTet PUBLIC lib/SDL-release-2.28.1/include)
-target_link_libraries(CTet PUBLIC SDL2)
-target_link_libraries(CTet PUBLIC CTetDirectX)
-target_link_libraries(CTet PUBLIC d3d11.lib dxguid.lib)
+add_library(libctet ${SOURCES})
+
+
