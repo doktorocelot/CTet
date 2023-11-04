@@ -10,6 +10,7 @@ bool holdQueue_performHold(HoldQueue *holdQueue, Piece *dest, Piece *src) {
     *dest = holdQueue->held;
     holdQueue->held = *src;
     holdQueue->holdCountBeforeLock++;
+    piece_resetOrientation(&holdQueue->held);
     return true;
 }
 
