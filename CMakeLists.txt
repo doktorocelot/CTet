@@ -1,30 +1,9 @@
 cmake_minimum_required(VERSION 3.25)
 
-option(USE_WIN_CONSOLE OFF)
-if (USE_WIN_CONSOLE)
-    add_compile_definitions(USE_WIN_CONSOLE)
-endif ()
-option(OCELOT_CONTROLS OFF)
-if (OCELOT_CONTROLS)
-    add_compile_definitions(OCELOT_CONTROLS)
-endif ()
-
-project(CTet C)
+project(libctet C)
 set(CMAKE_C_STANDARD 11)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-set(BUILD_SHARED_LIBS ON)
-set(__WIN32__ ON)
-if (WIN32)
-    add_definitions(-D__WIN32__)
-endif ()
-add_subdirectory(extern/SDL)
-
-
 set(SOURCES
-        src/main.c
-
         src/math/quick-math.h
         src/math/point.h src/math/point.c
         src/math/prng.h src/math/prng.c
@@ -32,7 +11,6 @@ set(SOURCES
         src/game/game.h src/game/game.c
 
         src/game/engine/engine.h src/game/engine/engine.c
-        src/game/engine/rendering.h src/game/engine/rendering.c
 
         src/game/engine/data/piece-data.h src/game/engine/data/piece-data.c
 
@@ -46,21 +24,9 @@ set(SOURCES
         src/game/engine/component/hold-queue.h src/game/engine/component/hold-queue.c
         src/game/engine/component/lockdown.h src/game/engine/component/lockdown.c
         src/game/engine/component/wallkick.h src/game/engine/component/wallkick.c
-        )
+)
 
-if (WIN32)
-    if (USE_WIN_CONSOLE)
-        add_executable(CTet ${SOURCES} icon.rc)
-    else ()
-        add_executable(CTet WIN32 ${SOURCES} icon.rc)
-    endif ()
-else ()
-    add_executable(CTet ${SOURCES})
-endif ()
 
-if (WIN32)
+add_library(libctet ${SOURCES})
 
-endif ()
 
-target_include_directories(CTet PUBLIC lib/SDL-release-2.28.1/include)
-target_link_libraries(CTet PUBLIC SDL2)
