@@ -51,7 +51,7 @@ void engine_reset(Engine *engine) {
     // Setup ActivePiece
     engine_spawnNewPiece(engine, nextQueue_next(&engine->nextQueue));
 
-    // Not dead
+    // Make engine not dead
     engine->isDead = false;
 }
 
