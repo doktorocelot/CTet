@@ -8,7 +8,7 @@ set(SOURCES
         src/math/point.c
         src/math/prng.h src/math/prng.c
 
-        src/game/engine.h src/game/engine.c
+        src/game/engine.c
 
         src/game/data/piece-data.h src/game/data/piece-data.c
 

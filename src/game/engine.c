@@ -1,13 +1,32 @@
 #include <malloc.h>
-#include <stdlib.h>
 #include <time.h>
 #include <ctet/ctet.h>
-#include "engine.h"
 #include "../math/prng.h"
 #include "data/piece-data.h"
 
+#include <ctet/ctet.h>
+
+#include "component/active-piece.h"
+#include "component/lockdown.h"
+#include "component/hold-queue.h"
+#include "component/next-queue.h"
+#include "component/gravity.h"
+#include "component/autoshift.h"
+
+struct CTetEngine {
+    Field field;
+    AutoshiftVars autoshiftVars;
+    Gravity gravity;
+    NextQueue nextQueue;
+    HoldQueue holdQueue;
+    Lockdown lockdown;
+    ActivePiece active;
+    bool isDead;
+};
 
 static int retryCount = 0;
+
+static void engine_spawnNewPiece(CTetEngine *engine, CTetPiece piece);
 
 static void engine_lock(CTetEngine *engine);
 
@@ -169,30 +188,6 @@ void engine_spawnNewPiece(CTetEngine *engine, CTetPiece piece) {
         engine->isDead = true;
     }
     lockdown_onPieceSpawn(&engine->lockdown, &engine->active);
-}
-
-bool engine_placingPieceWillDie(CTetEngine *engine) {
-    CTetPiece nextPiece = nextQueue_peek(&engine->nextQueue);
-    CTetPoint *next = nextPiece.coords;
-    CTetPieceType nextType = nextPiece.type;
-    CTetPoint *current_startingPtr = engine->active.piece.coords;
-    CTetPoint *current;
-    int distanceToGround = activePiece_getDistanceToGround(&engine->active);
-    for (int a = 0; a < CT_BLOCKS_PER_PIECE; a++) {
-        current = current_startingPtr;
-        for (int b = 0; b < CT_BLOCKS_PER_PIECE; b++) {
-            if (ctPoint_isEqual(
-                    (CTetPoint) {current->x + engine->active.pos.x,
-                                 current->y + engine->active.pos.y - distanceToGround},
-                    ctPoint_addToNew(*next, pieceData_getSpawnLocation(nextType)))
-                    ) {
-                return true;
-            }
-            current++;
-        }
-        next++;
-    }
-    return false;
 }
 
 void engine_shiftActive(CTetEngine *engine, ShiftDirection dir) {
