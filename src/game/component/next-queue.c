@@ -15,7 +15,7 @@ void nextQueue_reset(NextQueue *nextQueue) {
     }
 }
 
-CTetPiece nextQueue_next(NextQueue *nextQueue) { // Todo optimize with a cycling array and add iterator for drawing
+CTetPiece nextQueue_next(NextQueue *nextQueue) {
     CTetPiece result = nextQueue->pieces[0];
     memmove(nextQueue->pieces, nextQueue->pieces + 1, (CT_NEXT_QUEUE_MAX_LENGTH - 1) * sizeof(CTetPiece));
     cycleSeed(&nextQueue->nextSeed);
