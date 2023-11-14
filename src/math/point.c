@@ -1,15 +1,15 @@
-#include <ctet/point.h>
+#include <ctet/ctet.h>
 
-Point point_addToNew(Point a, Point b) {
-    return (Point) {a.x + b.x, a.y + b.y};
+CTetPoint ctPoint_addToNew(CTetPoint a, CTetPoint b) {
+    return (CTetPoint) {a.x + b.x, a.y + b.y};
 }
 
-void point_add(Point *dest, Point addend) {
+void ctPoint_add(CTetPoint *dest, CTetPoint addend) {
     dest->x += addend.x;
     dest->y += addend.y;
 }
 
-bool point_isEqual(Point a, Point b) {
+bool ctPoint_isEqual(CTetPoint a, CTetPoint b) {
     return a.x == b.x && a.y == b.y;
 }
 

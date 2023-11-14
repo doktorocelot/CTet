@@ -1,4 +1,4 @@
-#include <ctet/prng.h>
+#include "prng.h"
 
 static const uint64_t a = 1664525;
 static const uint64_t c = 1013904223;

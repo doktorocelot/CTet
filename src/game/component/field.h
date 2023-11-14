@@ -1,11 +1,7 @@
 #pragma once
 
 #include "block.h"
-#include "point.h"
-
-#define FIELD_WIDTH 10
-#define FIELD_HEIGHT 40
-#define FIELD_NORMAL_HEIGHT 20
+#include <ctet/ctet.h>
 
 #define HIT_LIST_END (-1)
 typedef enum {
@@ -15,14 +11,14 @@ typedef enum {
 } CoordType;
 
 typedef struct {
-    Block matrix[FIELD_HEIGHT][FIELD_WIDTH]; // y first to make row operations easier
+    CTetBlock matrix[CT_TOTAL_FIELD_HEIGHT][CT_FIELD_WIDTH]; // y first to make row operations easier
 } Field;
 
 void field_clear(Field *field);
 
-CoordType field_coordTypeAt(Field *field, Point coords);
+CoordType field_coordTypeAt(Field *field, CTetPoint coords);
 
-void field_setBlockAt(Field *field, Block block, Point coords);
+void field_setBlockAt(Field *field, CTetBlock block, CTetPoint coords);
 
 void field_getFullRowHitList(Field *field, int *hitList);
 

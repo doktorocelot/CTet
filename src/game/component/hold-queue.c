@@ -1,11 +1,11 @@
-#include <ctet/hold-queue.h>
+#include "hold-queue.h"
 
 void holdQueue_reset(HoldQueue *holdQueue) {
-    holdQueue->held = (Piece) {.type = PieceType_NONE};
+    holdQueue->held = (CTetPiece) {.type = CTetPieceType_NONE};
     holdQueue->holdCountBeforeLock = 0;
 }
 
-bool holdQueue_performHold(HoldQueue *holdQueue, Piece *dest, Piece *src) {
+bool holdQueue_performHold(HoldQueue *holdQueue, CTetPiece *dest, CTetPiece *src) {
     if (holdQueue_isLocked(holdQueue)) return false;
     *dest = holdQueue->held;
     holdQueue->held = *src;

@@ -1,7 +1,7 @@
-#include <ctet/gravity.h>
+#include "gravity.h"
 
 int gravity_tick(Gravity *gravity, ActivePiece *activePiece, float deltaTime) {
-    if (activePiece_collidesWith(activePiece, (Point) {0, -1})) {
+    if (activePiece_collidesWith(activePiece, (CTetPoint) {0, -1})) {
         gravity_onHitFloor(gravity);
         return 0;
     } else if (gravity->msPerRow < 0) {

@@ -1,13 +1,13 @@
 #pragma once
 
 #include <stdbool.h>
-#include "point.h"
+#include <ctet/ctet.h>
 #include "piece.h"
 #include "field.h"
 
 typedef struct {
-    Point pos;
-    Piece piece;
+    CTetPoint pos;
+    CTetPiece piece;
     Field *field;
 } ActivePiece;
 
@@ -17,15 +17,15 @@ typedef enum {
     ShiftDirection_RIGHT,
 } ShiftDirection;
 
-bool activePiece_newPiece(ActivePiece *active, Piece piece);
+bool activePiece_newPiece(ActivePiece *active, CTetPiece piece);
 
 bool activePiece_shift(ActivePiece *active, ShiftDirection direction);
 
 bool activePiece_dropOneLine(ActivePiece *active);
 
-bool activePiece_collidesWithOrientation(ActivePiece *active, Orientation orientation, Point offset);
+bool activePiece_collidesWithOrientation(ActivePiece *active, CTetOrientation orientation, CTetPoint offset);
 
-bool activePiece_collidesWith(ActivePiece *active, Point offset);
+bool activePiece_collidesWith(ActivePiece *active, CTetPoint offset);
 
 void activePiece_slamToFloor(ActivePiece *active);
 

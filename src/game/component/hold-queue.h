@@ -4,13 +4,13 @@
 #include "piece.h"
 
 typedef struct {
-    Piece held;
+    CTetPiece held;
     int holdCountBeforeLock;
 } HoldQueue;
 
 void holdQueue_reset(HoldQueue *holdQueue);
 
-bool holdQueue_performHold(HoldQueue *holdQueue, Piece *dest, Piece *src);
+bool holdQueue_performHold(HoldQueue *holdQueue, CTetPiece *dest, CTetPiece *src);
 
 void holdQueue_onLock(HoldQueue *holdQueue);
 

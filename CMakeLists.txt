@@ -5,23 +5,24 @@ set(CMAKE_C_STANDARD 11)
 
 set(SOURCES
         src/math/quick-math.h
-        include/ctet/point.h src/math/point.c
-        include/ctet/prng.h src/math/prng.c
+        src/math/point.c
+        src/math/prng.h src/math/prng.c
 
-        include/ctet/engine.h src/game/engine/engine.c
+        src/game/engine.h src/game/engine.c
 
-        include/ctet/piece-data.h src/game/engine/data/piece-data.c
+        src/game/data/piece-data.h src/game/data/piece-data.c
 
-        include/ctet/block.h src/game/engine/component/block.c
-        include/ctet/piece.h src/game/engine/component/piece.c
-        include/ctet/active-piece.h src/game/engine/component/active-piece.c
-        include/ctet/field.h src/game/engine/component/field.c
-        include/ctet/autoshift.h src/game/engine/component/autoshift.c
-        include/ctet/gravity.h src/game/engine/component/gravity.c
-        include/ctet/next-queue.h src/game/engine/component/next-queue.c
-        include/ctet/hold-queue.h src/game/engine/component/hold-queue.c
-        include/ctet/lockdown.h src/game/engine/component/lockdown.c
-        include/ctet/wallkick.h src/game/engine/component/wallkick.c
+        src/game/component/block.h src/game/component/block.c
+        src/game/component/piece.h src/game/component/piece.c
+        src/game/component/active-piece.h src/game/component/active-piece.c
+        src/game/component/field.h src/game/component/field.c
+        src/game/component/autoshift.h src/game/component/autoshift.c
+        src/game/component/gravity.h src/game/component/gravity.c
+        src/game/component/next-queue.h src/game/component/next-queue.c
+        src/game/component/hold-queue.h src/game/component/hold-queue.c
+        src/game/component/lockdown.h src/game/component/lockdown.c
+        src/game/component/wallkick.h src/game/component/wallkick.c
+        include/ctet/ctet.h
 )
 
 

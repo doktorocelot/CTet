@@ -1,5 +1,5 @@
-#include <ctet/lockdown.h>
-#include "../../../math/quick-math.h"
+#include "lockdown.h"
+#include "../../math/quick-math.h"
 
 static void lockdown_resetVars(Lockdown *lockdown);
 
@@ -8,7 +8,7 @@ static bool lockdown_shouldLock(const Lockdown *lockdown, ActivePiece *activePie
 
 bool lockdown_tick(Lockdown *lockdown, ActivePiece *activePiece, float deltaTime) {
 
-    if (activePiece_collidesWith(activePiece, (Point) {0, -1})) {
+    if (activePiece_collidesWith(activePiece, (CTetPoint) {0, -1})) {
         lockdown->lockDelayAcc += deltaTime;
     }
 
@@ -47,7 +47,7 @@ void lockdown_resetVars(Lockdown *lockdown) {
 
 bool lockdown_shouldLock(const Lockdown *lockdown, ActivePiece *activePiece) {
     return (lockdown->lockDelayAcc >= LOCK_DELAY || lockdown->shouldForceLockPiece)
-           && activePiece_collidesWith(activePiece, (Point) {0, -1});
+           && activePiece_collidesWith(activePiece, (CTetPoint) {0, -1});
 }
 
 float lockdown_lockDelayRemaining(Lockdown *lockdown) {
