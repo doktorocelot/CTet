@@ -26,13 +26,13 @@ struct CTetEngine {
 
 static int retryCount = 0;
 
-static void engine_spawnNewPiece(CTetEngine *engine, CTetPiece piece);
+static void spawnNextPiece(CTetEngine *engine, CTetPiece piece);
 
-static void engine_lock(CTetEngine *engine);
+static void lockdown(CTetEngine *engine);
 
-static void engine_shiftActive(CTetEngine *engine, ShiftDirection dir);
+static void shiftActive(CTetEngine *engine, ShiftDirection dir);
 
-static void engine_rotateActive(CTetEngine *engine, int amount);
+static void rotateActive(CTetEngine *engine, int amount);
 
 CTetEngine *ctEngine_create() {
     CTetEngine *engine = malloc(sizeof(CTetEngine));
@@ -70,7 +70,7 @@ void ctEngine_reset(CTetEngine *engine) {
     engine->lockdown = (Lockdown) {0};
 
     // Setup ActivePiece
-    engine_spawnNewPiece(engine, nextQueue_next(&engine->nextQueue));
+    spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
 
     // Make engine not dead
     engine->isDead = false;
@@ -80,7 +80,7 @@ void ctEngine_update(CTetEngine *engine, float deltaMillis) {
 
     int autoshiftResult;
     while (autoshiftResult = autoshift_tick(&engine->autoshiftVars, deltaMillis), autoshiftResult) {
-        engine_shiftActive(engine, autoshiftResult);
+        shiftActive(engine, autoshiftResult);
     }
 
     int gravityResult;
@@ -91,12 +91,12 @@ void ctEngine_update(CTetEngine *engine, float deltaMillis) {
     }
 
     if (lockdown_tick(&engine->lockdown, &engine->active, deltaMillis)) {
-        engine_lock(engine);
+        lockdown(engine);
     }
 }
 
 void ctEngine_onShiftRightDown(CTetEngine *engine) {
-    engine_shiftActive(engine, ShiftDirection_RIGHT);
+    shiftActive(engine, ShiftDirection_RIGHT);
     autoshift_onPress(&engine->autoshiftVars, ShiftDirection_RIGHT);
 }
 
@@ -105,7 +105,7 @@ void ctEngine_onShiftRightUp(CTetEngine *engine) {
 }
 
 void ctEngine_onShiftLeftDown(CTetEngine *engine) {
-    engine_shiftActive(engine, ShiftDirection_LEFT);
+    shiftActive(engine, ShiftDirection_LEFT);
     autoshift_onPress(&engine->autoshiftVars, ShiftDirection_LEFT);
 }
 
@@ -115,10 +115,10 @@ void ctEngine_onShiftLeftUp(CTetEngine *engine) {
 
 void ctEngine_onHardDrop(CTetEngine *engine) {
     activePiece_slamToFloor(&engine->active);
-    engine_lock(engine);
+    lockdown(engine);
 }
 
-void engine_lock(CTetEngine *engine) {
+void lockdown(CTetEngine *engine) {
     activePiece_placeToField(&engine->active);
     holdQueue_onLock(&engine->holdQueue);
 
@@ -127,15 +127,15 @@ void engine_lock(CTetEngine *engine) {
     field_killHitList(&engine->field, hitList);
     field_collapseHitList(&engine->field, hitList);
 
-    engine_spawnNewPiece(engine, nextQueue_next(&engine->nextQueue));
+    spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
 }
 
 void ctEngine_onRotateLeft(CTetEngine *engine) {
-    engine_rotateActive(engine, CT_ROTATION_CCW);
+    rotateActive(engine, CT_ROTATION_CCW);
 }
 
 void ctEngine_onRotateRight(CTetEngine *engine) {
-    engine_rotateActive(engine, CT_ROTATION_CW);
+    rotateActive(engine, CT_ROTATION_CW);
 }
 
 void ctEngine_onSoftDropDown(CTetEngine *engine) {
@@ -149,8 +149,8 @@ void ctEngine_onSoftDropUp(CTetEngine *engine) {
 void ctEngine_onHoldDown(CTetEngine *engine) {
     CTetPiece holdReturn;
     if (holdQueue_performHold(&engine->holdQueue, &holdReturn, &engine->active.piece)) {
-        if (holdReturn.type == CTetPieceType_NONE) engine_spawnNewPiece(engine, nextQueue_next(&engine->nextQueue));
-        else engine_spawnNewPiece(engine, holdReturn);
+        if (holdReturn.type == CTetPieceType_NONE) spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
+        else spawnNextPiece(engine, holdReturn);
     }
 
 }
@@ -183,20 +183,20 @@ const CTetBlock *ctEngine_getBlockAtFieldLocation(CTetEngine *engine, CTetPoint 
     return &engine->field.matrix[location.y][location.x];
 }
 
-void engine_spawnNewPiece(CTetEngine *engine, CTetPiece piece) {
+void spawnNextPiece(CTetEngine *engine, CTetPiece piece) {
     if (!activePiece_newPiece(&engine->active, piece)) {
         engine->isDead = true;
     }
     lockdown_onPieceSpawn(&engine->lockdown, &engine->active);
 }
 
-void engine_shiftActive(CTetEngine *engine, ShiftDirection dir) {
+void shiftActive(CTetEngine *engine, ShiftDirection dir) {
     if (activePiece_shift(&engine->active, dir)) {
         lockdown_onPieceManipulate(&engine->lockdown);
     }
 }
 
-void engine_rotateActive(CTetEngine *engine, int amount) {
+void rotateActive(CTetEngine *engine, int amount) {
     if (activePiece_rotate(&engine->active, amount)) {
         lockdown_onPieceManipulate(&engine->lockdown);
     }
