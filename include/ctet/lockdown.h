@@ -18,3 +18,5 @@ bool lockdown_tick(Lockdown *lockdown, ActivePiece *activePiece, float deltaTime
 void lockdown_onPieceSpawn(Lockdown *lockdown, ActivePiece *activePiece);
 
 void lockdown_onPieceManipulate(Lockdown *lockdown);
+
+float lockdown_lockDelayRemaining(Lockdown *lockdown);
