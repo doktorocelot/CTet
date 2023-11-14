@@ -49,3 +49,7 @@ bool lockdown_shouldLock(const Lockdown *lockdown, ActivePiece *activePiece) {
     return (lockdown->lockDelayAcc >= LOCK_DELAY || lockdown->shouldForceLockPiece)
            && activePiece_collidesWith(activePiece, (Point) {0, -1});
 }
+
+float lockdown_lockDelayRemaining(Lockdown *lockdown) {
+    return 1 - (lockdown->lockDelayAcc / LOCK_DELAY);
+}
