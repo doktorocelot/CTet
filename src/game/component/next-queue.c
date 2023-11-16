@@ -36,9 +36,8 @@ void nextQueue_genNewPieceAt(NextQueue *nextQueue, int i) {
 
     nextQueue->pieces[i] = piece_buildFromType(nextQueue->bag[selectedIndex]);
 
-    if (selectedIndex != nextQueue->remainingPiecesInBag - 1) {
-        *(nextQueue->bag + selectedIndex) = nextQueue->bag[nextQueue->remainingPiecesInBag - 1];
-    }
+    *(nextQueue->bag + selectedIndex) = nextQueue->bag[nextQueue->remainingPiecesInBag - 1];
+    
     nextQueue->remainingPiecesInBag--;
 
 }
