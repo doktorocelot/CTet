@@ -6,7 +6,7 @@ static void lockdown_resetVars(Lockdown *lockdown);
 static bool lockdown_shouldLock(const Lockdown *lockdown, ActivePiece *activePiece);
 
 
-bool lockdown_tick(Lockdown *lockdown, ActivePiece *activePiece, float deltaTime) {
+bool lockdown_update(Lockdown *lockdown, ActivePiece *activePiece, float deltaTime) {
 
     if (activePiece_collidesWith(activePiece, (CTetPoint) {0, -1})) {
         lockdown->lockDelayAcc += deltaTime;

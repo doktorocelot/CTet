@@ -9,6 +9,6 @@ typedef struct {
     bool softDropIsDown;
 } Gravity;
 
-int gravity_tick(Gravity *gravity, ActivePiece *activePiece, float deltaTime);
+int gravity_update(Gravity *gravity, ActivePiece *activePiece, float deltaTime);
 
 void gravity_onHitFloor(Gravity *gravity);

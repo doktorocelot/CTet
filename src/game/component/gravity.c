@@ -1,6 +1,6 @@
 #include "gravity.h"
 
-int gravity_tick(Gravity *gravity, ActivePiece *activePiece, float deltaTime) {
+int gravity_update(Gravity *gravity, ActivePiece *activePiece, float deltaTime) {
     if (activePiece_collidesWith(activePiece, (CTetPoint) {0, -1})) {
         gravity_onHitFloor(gravity);
         return 0;

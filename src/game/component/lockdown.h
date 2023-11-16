@@ -13,7 +13,7 @@ typedef struct {
     bool shouldForceLockPiece;
 } Lockdown;
 
-bool lockdown_tick(Lockdown *lockdown, ActivePiece *activePiece, float deltaTime);
+bool lockdown_update(Lockdown *lockdown, ActivePiece *activePiece, float deltaTime);
 
 void lockdown_onPieceSpawn(Lockdown *lockdown, ActivePiece *activePiece);
 

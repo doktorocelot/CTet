@@ -79,18 +79,18 @@ void ctEngine_reset(CTetEngine *engine) {
 void ctEngine_update(CTetEngine *engine, float deltaMillis) {
 
     int autoshiftResult;
-    while (autoshiftResult = autoshift_tick(&engine->autoshiftVars, deltaMillis), autoshiftResult) {
+    while (autoshiftResult = autoshift_update(&engine->autoshiftVars, deltaMillis), autoshiftResult) {
         shiftActive(engine, autoshiftResult);
     }
 
     int gravityResult;
-    while (gravityResult = gravity_tick(&engine->gravity, &engine->active, deltaMillis), gravityResult) {
+    while (gravityResult = gravity_update(&engine->gravity, &engine->active, deltaMillis), gravityResult) {
         if (!activePiece_dropOneLine(&engine->active)) {
             gravity_onHitFloor(&engine->gravity);
         }
     }
 
-    if (lockdown_tick(&engine->lockdown, &engine->active, deltaMillis)) {
+    if (lockdown_update(&engine->lockdown, &engine->active, deltaMillis)) {
         lockdown(engine);
     }
 }

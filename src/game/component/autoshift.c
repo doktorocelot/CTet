@@ -3,7 +3,7 @@
 #define AUTOSHIFT_DELAY 200
 #define AUTOSHIFT_RATE 33
 
-int autoshift_tick(AutoshiftVars *vars, float delta) {
+int autoshift_update(AutoshiftVars *vars, float delta) {
     if (vars->currentDir == 0) return 0;
 
     if (vars->hasReleasedShift) {

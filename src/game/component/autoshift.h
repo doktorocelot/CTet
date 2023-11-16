@@ -11,7 +11,7 @@ typedef struct {
     bool leftIsDown;
 } AutoshiftVars;
 
-int autoshift_tick(AutoshiftVars *vars, float delta);
+int autoshift_update(AutoshiftVars *vars, float delta);
 
 void autoshift_onPress(AutoshiftVars *vars, int direction);
 void autoshift_onRelease(AutoshiftVars *vars, int direction);
