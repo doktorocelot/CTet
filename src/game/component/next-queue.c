@@ -23,10 +23,6 @@ CTetPiece nextQueue_next(NextQueue *nextQueue) {
     return result;
 }
 
-CTetPiece nextQueue_peek(NextQueue *nextQueue) {
-    return nextQueue->pieces[0];
-}
-
 void nextQueue_genNewPieceAt(NextQueue *nextQueue, int i) {
     uint64_t nextSeed = nextQueue->nextSeed;
 

@@ -16,4 +16,3 @@ void nextQueue_reset(NextQueue *nextQueue);
 
 CTetPiece nextQueue_next(NextQueue *nextQueue);
 
-CTetPiece nextQueue_peek(NextQueue *nextQueue);
