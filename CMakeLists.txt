@@ -16,11 +16,11 @@ set(SOURCES
         src/game/component/piece.h src/game/component/piece.c
         src/game/component/active-piece.h src/game/component/active-piece.c
         src/game/component/field.h src/game/component/field.c
-        src/game/component/autoshift.h src/game/component/autoshift.c
-        src/game/component/gravity.h src/game/component/gravity.c
+        src/game/behavior/autoshift.h src/game/behavior/autoshift.c
+        src/game/behavior/gravity.h src/game/behavior/gravity.c
         src/game/component/next-queue.h src/game/component/next-queue.c
         src/game/component/hold-queue.h src/game/component/hold-queue.c
-        src/game/component/lockdown.h src/game/component/lockdown.c
+        src/game/behavior/lockdown.h src/game/behavior/lockdown.c
         src/game/component/wallkick.h src/game/component/wallkick.c
         include/ctet/ctet.h
 )

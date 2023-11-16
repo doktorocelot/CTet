@@ -7,11 +7,11 @@
 #include <ctet/ctet.h>
 
 #include "component/active-piece.h"
-#include "component/lockdown.h"
+#include "behavior/lockdown.h"
 #include "component/hold-queue.h"
 #include "component/next-queue.h"
-#include "component/gravity.h"
-#include "component/autoshift.h"
+#include "behavior/gravity.h"
+#include "behavior/autoshift.h"
 
 struct CTetEngine {
     Field field;

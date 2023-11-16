@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdbool.h>
-#include "active-piece.h"
+#include "../component/active-piece.h"
 
 #define LOCK_DELAY 500
 #define MANIPULATION_LIMIT 15

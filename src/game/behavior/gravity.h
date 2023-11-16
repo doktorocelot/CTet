@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdbool.h>
-#include "active-piece.h"
+#include "../component/active-piece.h"
 
 typedef struct {
     float msPerRow;
