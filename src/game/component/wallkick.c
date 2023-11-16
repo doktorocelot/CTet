@@ -43,7 +43,7 @@ static const CTetPoint WALLKICK_DATA_I[4][2][5] = {
 
 // No kicks
 static const CTetPoint WALLKICK_DATA_NONE[5] = {
-        0,0,0,0,0,0,0,0,0,0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 static CTetPoint *getWallkickData(CTetPiece *piece, int direction);
@@ -51,9 +51,11 @@ static CTetPoint *getWallkickData(CTetPiece *piece, int direction);
 bool executeWallkick(CTetPoint *dest, ActivePiece *active, int direction) {
     CTetPoint *wallkickData = getWallkickData(&active->piece, direction);
     for (int i = 0; i < 5; i++) {
-        if (!activePiece_collidesWithOrientation(active,
-                                                 piece_getNewOrientation(&active->piece, direction),
-                                                 *wallkickData)) {
+        if (!activePiece_collidesWithOrientation(
+                active,
+                piece_getNewOrientation(&active->piece, direction),
+                *wallkickData
+        )) {
             *dest = *wallkickData;
             return true;
         }
