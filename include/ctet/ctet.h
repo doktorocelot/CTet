@@ -25,9 +25,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+
+
 #ifdef __cplusplus
+#include <cstdint>
 extern "C" {
 #else
+#include "stdint.h"
 #include "stdbool.h"
 #endif
 
@@ -209,6 +213,14 @@ typedef struct {
 // A CTet game engine.
 typedef struct CTetEngine CTetEngine;
 
+typedef int CTetMessageId;
+
+typedef struct  {
+    CTetMessageId id;
+    int32_t detailA;
+    int32_t detailB;
+} CTetMessage;
+
 /**
  * Create a new CTetEngine instance. This instance must eventually be destroyed.
  *
@@ -370,6 +382,27 @@ const CTetPiece *ctEngine_getHeldPiece(CTetEngine *engine);
  * @return A pointer to the CTetBlock at the specified location.
  */
 const CTetBlock *ctEngine_getBlockAtFieldLocation(CTetEngine *engine, CTetPoint location);
+
+// ===========
+// Messages
+// ===========
+
+CTetMessage ctEngine_nextMessage(CTetEngine *engine);
+
+/**
+ * There are no more messages.
+ */
+#define CT_MSG_NONE 0x0
+
+/**
+ * The game is over. DetailA is the type. DetailB is unused.
+ */
+#define CT_MSG_GAME_OVER 0x1
+
+/**
+ * The player died because the next piece could not spawn without an obstruction.
+ */
+#define CT_GAME_OVER_TYPE_BLOCK_OUT 0x0
 
 /*******************
 End

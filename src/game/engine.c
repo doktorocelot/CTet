@@ -4,8 +4,6 @@
 #include "../math/prng.h"
 #include "data/piece-data.h"
 
-#include <ctet/ctet.h>
-
 #include "component/active-piece.h"
 #include "behavior/lockdown.h"
 #include "component/hold-queue.h"
@@ -21,10 +19,13 @@ struct CTetEngine {
     HoldQueue holdQueue;
     Lockdown lockdown;
     ActivePiece active;
-    bool isDead;
+    CTetMessage messages[256];
+    int msgPtr;
 };
 
 static int retryCount = 0;
+
+static void pushMessage(CTetEngine *engine, CTetMessageId id, int32_t detailA, int32_t detailB);
 
 static void spawnNextPiece(CTetEngine *engine, CTetPiece piece);
 
@@ -40,6 +41,8 @@ CTetEngine *ctEngine_create() {
     engine->active.field = &engine->field;
 
     ctEngine_reset(engine);
+
+    engine->msgPtr = -1;
 
     return engine;
 }
@@ -71,9 +74,6 @@ void ctEngine_reset(CTetEngine *engine) {
 
     // Setup ActivePiece
     spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
-
-    // Make engine not dead
-    engine->isDead = false;
 }
 
 void ctEngine_update(CTetEngine *engine, float deltaMillis) {
@@ -183,9 +183,18 @@ const CTetBlock *ctEngine_getBlockAtFieldLocation(CTetEngine *engine, CTetPoint 
     return &engine->field.matrix[location.y][location.x];
 }
 
+CTetMessage ctEngine_nextMessage(CTetEngine *engine) {
+    if (engine->msgPtr <= 0) return (CTetMessage) {.id = CT_MSG_NONE};
+    return engine->messages[engine->msgPtr--];
+}
+
+void pushMessage(CTetEngine *engine, CTetMessageId id, int32_t detailA, int32_t detailB) {
+    engine->messages[++engine->msgPtr] = (CTetMessage) {.id = id, .detailA = detailA, .detailB = detailB};
+}
+
 void spawnNextPiece(CTetEngine *engine, CTetPiece piece) {
     if (!activePiece_newPiece(&engine->active, piece)) {
-        engine->isDead = true;
+        pushMessage(engine, CT_MSG_GAME_OVER, CT_GAME_OVER_TYPE_BLOCK_OUT, 0);
     }
     lockdown_onPieceSpawn(&engine->lockdown, &engine->active);
 }
