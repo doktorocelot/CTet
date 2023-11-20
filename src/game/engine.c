@@ -184,7 +184,7 @@ const CTetBlock *ctEngine_getBlockAtFieldLocation(CTetEngine *engine, CTetPoint 
 }
 
 CTetMessage ctEngine_nextMessage(CTetEngine *engine) {
-    if (engine->msgPtr <= 0) return (CTetMessage) {.id = CT_MSG_NONE};
+    if (engine->msgPtr < 0) return (CTetMessage) {.id = CT_MSG_NONE};
     return engine->messages[engine->msgPtr--];
 }
 
