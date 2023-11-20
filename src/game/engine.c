@@ -193,7 +193,8 @@ void pushMessage(CTetEngine *engine, CTetMessageId id, int32_t detailA, int32_t 
 }
 
 void spawnNextPiece(CTetEngine *engine, CTetPiece piece) {
-    if (!activePiece_newPiece(&engine->active, piece)) {
+    activePiece_newPiece(&engine->active, piece);
+    if (activePiece_collidesWith(&engine->active, (CTetPoint) {0})) {
         pushMessage(engine, CT_MSG_GAME_OVER, CT_GAME_OVER_TYPE_BLOCK_OUT, 0);
     }
     lockdown_onPieceSpawn(&engine->lockdown, &engine->active);
