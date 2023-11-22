@@ -112,7 +112,9 @@ typedef enum {
  * Represents a block in the game.
  */
 typedef struct {
+    // The color of the block
     CTetBlockColor color;
+    // The timestamp at which the block was locked into place on the game field.
     double lockedTimestamp;
 } CTetBlock;
 
