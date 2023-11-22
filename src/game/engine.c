@@ -19,6 +19,7 @@ struct CTetEngine {
     HoldQueue holdQueue;
     Lockdown lockdown;
     ActivePiece active;
+    double timeElapsed;
     CTetMessage messages[256];
     int msgPtr;
 };
@@ -74,10 +75,13 @@ void ctEngine_reset(CTetEngine *engine) {
 
     // Setup ActivePiece
     spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
+
+    // Reset Time Elapsed
+    engine->timeElapsed = 0;
 }
 
 void ctEngine_update(CTetEngine *engine, float deltaMillis) {
-
+    
     int autoshiftResult;
     while (autoshiftResult = autoshift_update(&engine->autoshiftVars, deltaMillis), autoshiftResult) {
         shiftActive(engine, autoshiftResult);
@@ -93,6 +97,7 @@ void ctEngine_update(CTetEngine *engine, float deltaMillis) {
     if (lockdown_update(&engine->lockdown, &engine->active, deltaMillis)) {
         lockdown(engine);
     }
+    engine->timeElapsed += deltaMillis;
 }
 
 void ctEngine_onShiftRightDown(CTetEngine *engine) {
@@ -119,7 +124,7 @@ void ctEngine_onHardDrop(CTetEngine *engine) {
 }
 
 void lockdown(CTetEngine *engine) {
-    activePiece_placeToField(&engine->active);
+    activePiece_placeToField(&engine->active, engine->timeElapsed);
     holdQueue_onLock(&engine->holdQueue);
 
     int hitList[CT_TOTAL_FIELD_HEIGHT + 1];
@@ -181,6 +186,10 @@ const CTetPiece *ctEngine_getHeldPiece(CTetEngine *engine) {
 
 const CTetBlock *ctEngine_getBlockAtFieldLocation(CTetEngine *engine, CTetPoint location) {
     return &engine->field.matrix[location.y][location.x];
+}
+
+double ctEngine_getTimestamp(const CTetEngine *engine) {
+    return engine->timeElapsed;
 }
 
 CTetMessage ctEngine_nextMessage(CTetEngine *engine) {

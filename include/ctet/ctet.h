@@ -113,6 +113,7 @@ typedef enum {
  */
 typedef struct {
     CTetBlockColor color;
+    double lockedTimestamp;
 } CTetBlock;
 
 // ===========
@@ -382,6 +383,8 @@ const CTetPiece *ctEngine_getHeldPiece(CTetEngine *engine);
  * @return A pointer to the CTetBlock at the specified location.
  */
 const CTetBlock *ctEngine_getBlockAtFieldLocation(CTetEngine *engine, CTetPoint location);
+
+double ctEngine_getTimestamp(const CTetEngine *engine);
 
 // ===========
 // Messages

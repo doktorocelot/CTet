@@ -1,4 +1,7 @@
 #include "active-piece.h"
+
+#include <stdio.h>
+
 #include "../data/piece-data.h"
 #include "wallkick.h"
 
@@ -51,12 +54,12 @@ int activePiece_getDistanceToGround(ActivePiece *active) {
     return distance;
 }
 
-void activePiece_placeToField(ActivePiece *active) {
+void activePiece_placeToField(ActivePiece *active, double lockTimestamp) {
     for (int i = 0; i < CT_BLOCKS_PER_PIECE; i++) {
-        CTetPiece piece = active->piece;
+        active->piece.blocks[i].lockedTimestamp = lockTimestamp;
         field_setBlockAt(active->field,
-                         piece.blocks[i],
-                         ctPoint_addToNew(piece.coords[i], active->pos));
+                         active->piece.blocks[i],
+                         ctPoint_addToNew(active->piece.coords[i], active->pos));
     }
 }
 

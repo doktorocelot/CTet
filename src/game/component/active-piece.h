@@ -31,6 +31,6 @@ void activePiece_slamToFloor(ActivePiece *active);
 
 int activePiece_getDistanceToGround(ActivePiece *active);
 
-void activePiece_placeToField(ActivePiece *active);
+void activePiece_placeToField(ActivePiece *active, double lockTimestamp);
 
 bool activePiece_rotate(ActivePiece *active, int amount);
