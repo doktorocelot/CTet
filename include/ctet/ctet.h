@@ -384,12 +384,29 @@ const CTetPiece *ctEngine_getHeldPiece(CTetEngine *engine);
  */
 const CTetBlock *ctEngine_getBlockAtFieldLocation(CTetEngine *engine, CTetPoint location);
 
+/**
+ * Retrieves the current timestamp within the game's internal clock,
+ * representing the amount of time elapsed since the start of the game.
+ *
+ * @param engine A pointer to the CTetEngine instance.
+ * @return The current timestamp as a double, representing time in millis.
+ */
 double ctEngine_getTimestamp(const CTetEngine *engine);
 
 // ===========
 // Messages
 // ===========
 
+/**
+ * Poll the CTetEngine for messages that indicate game events,
+ * state changes, or other significant occurrences during gameplay. Each message is represented
+ * After a message is retrieved, it is removed from the queue. If there are no more messages,
+ * message id CT_MSG_NONE is returned.
+ *
+ * @param engine A pointer to the CTetEngine instance.
+ * @return A CTetMessage structure representing the next message in the queue. If there are no messages,
+ *         a message with id CT_MSG_NONE is returned.
+ */
 CTetMessage ctEngine_nextMessage(CTetEngine *engine);
 
 /**
