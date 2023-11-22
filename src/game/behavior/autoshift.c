@@ -3,7 +3,7 @@
 #define AUTOSHIFT_DELAY 200
 #define AUTOSHIFT_RATE 33
 
-int autoshift_update(AutoshiftVars *vars, float delta) {
+int autoshift_update(AutoshiftVars *vars, const float delta) {
     if (vars->currentDir == 0) return 0;
 
     if (vars->hasReleasedShift) {
@@ -16,7 +16,7 @@ int autoshift_update(AutoshiftVars *vars, float delta) {
     }
     if (vars->autoshiftDelayAcc >= AUTOSHIFT_DELAY) {
 
-        bool shouldShift = vars->autoshiftRateAcc >= AUTOSHIFT_RATE;
+        const bool shouldShift = vars->autoshiftRateAcc >= AUTOSHIFT_RATE;
         if (shouldShift) {
             vars->autoshiftRateAcc -= AUTOSHIFT_RATE;
             return vars->currentDir;
@@ -27,7 +27,7 @@ int autoshift_update(AutoshiftVars *vars, float delta) {
     return 0;
 }
 
-void autoshift_onPress(AutoshiftVars *vars, int direction) {
+void autoshift_onPress(AutoshiftVars *vars, const int direction) {
     if (direction == -1) {
         vars->leftIsDown = true;
     } else {
@@ -38,7 +38,7 @@ void autoshift_onPress(AutoshiftVars *vars, int direction) {
     vars->currentDir = direction;
 }
 
-void autoshift_onRelease(AutoshiftVars *vars, int direction) {
+void autoshift_onRelease(AutoshiftVars *vars, const int direction) {
     if (direction == -1) {
         vars->leftIsDown = false;
     } else {

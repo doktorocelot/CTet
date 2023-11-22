@@ -2,9 +2,6 @@
 
 #include <ctet/ctet.h>
 
-#include "block.h"
-#include <ctet/ctet.h>
-
 #define CT_ROTATION_CW 1
 #define CT_ROTATION_CCW 3
 #define CT_ROTATION_180 2
@@ -17,4 +14,4 @@ void piece_resetOrientation(CTetPiece *piece);
 
 CTetOrientation piece_getNewOrientation(const CTetPiece *piece, int amount);
 
-CTetPoint *piece_getCoordsForOrientation(CTetPiece *piece, CTetOrientation orientation);
+const CTetPoint* piece_getCoordsForOrientation(const CTetPiece *piece, CTetOrientation orientation);

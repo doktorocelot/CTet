@@ -13,10 +13,10 @@ typedef struct {
     bool shouldForceLockPiece;
 } Lockdown;
 
-bool lockdown_update(Lockdown *lockdown, ActivePiece *activePiece, float deltaTime);
+bool lockdown_update(Lockdown *lockdown, const ActivePiece *activePiece, float deltaTime);
 
-void lockdown_onPieceSpawn(Lockdown *lockdown, ActivePiece *activePiece);
+void lockdown_onPieceSpawn(Lockdown *lockdown, const ActivePiece *activePiece);
 
 void lockdown_onPieceManipulate(Lockdown *lockdown);
 
-float lockdown_lockDelayRemaining(Lockdown *lockdown);
+float lockdown_lockDelayRemaining(const Lockdown *lockdown);

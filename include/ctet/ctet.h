@@ -172,7 +172,7 @@ typedef struct {
     // The blocks that make up the piece.
     CTetBlock blocks[CT_BLOCKS_PER_PIECE];
     // The coordinates of the piece's blocks.
-    CTetPoint *coords;
+    const CTetPoint *coords;
     // The orientation of the piece.
     CTetOrientation orientation;
     // The type of the piece.
@@ -333,7 +333,7 @@ void ctEngine_onHoldDown(CTetEngine *engine);
  * @param engine A pointer to the CTetEngine instance.
  * @return A CTetPoint representing the position of the active piece.
  */
-CTetPoint ctEngine_getActivePiecePos(CTetEngine *engine);
+CTetPoint ctEngine_getActivePiecePos(const CTetEngine *engine);
 
 /**
  * Get a pointer to the active piece currently in play.
@@ -341,7 +341,7 @@ CTetPoint ctEngine_getActivePiecePos(CTetEngine *engine);
  * @param engine A pointer to the CTetEngine instance.
  * @return A pointer to the active CTetPiece.
  */
-const CTetPiece *ctEngine_getActivePiece(CTetEngine *engine);
+const CTetPiece *ctEngine_getActivePiece(const CTetEngine *engine);
 
 /**
  * Get the offset (distance) of the ghost piece from the active piece's position.
@@ -350,7 +350,7 @@ const CTetPiece *ctEngine_getActivePiece(CTetEngine *engine);
  * @param engine A pointer to the CTetEngine instance.
  * @return A CTetPoint representing the offset of the ghost piece.
  */
-CTetPoint ctEngine_getGhostOffset(CTetEngine *engine);
+CTetPoint ctEngine_getGhostOffset(const CTetEngine *engine);
 
 /**
  * Get the remaining lock delay percentage for the active piece.
@@ -359,7 +359,7 @@ CTetPoint ctEngine_getGhostOffset(CTetEngine *engine);
  * @param engine A pointer to the CTetEngine instance.
  * @return The remaining lock delay as a percentage (0 to 1).
  */
-float ctEngine_getLockDelayRemainingPercentage(CTetEngine *engine);
+float ctEngine_getLockDelayRemainingPercentage(const CTetEngine *engine);
 
 /**
  * Get an array of pointers to the next pieces in the queue.
@@ -367,7 +367,7 @@ float ctEngine_getLockDelayRemainingPercentage(CTetEngine *engine);
  * @param engine A pointer to the CTetEngine instance.
  * @return A pointer to an array of CTetPiece pointers representing the next pieces.
  */
-const CTetPiece *ctEngine_getNextPieces(CTetEngine *engine);
+const CTetPiece *ctEngine_getNextPieces(const CTetEngine *engine);
 
 /**
  * Get the piece currently held by the player.
@@ -375,7 +375,7 @@ const CTetPiece *ctEngine_getNextPieces(CTetEngine *engine);
  * @param engine A pointer to the CTetEngine instance.
  * @return A pointer to the held CTetPiece.
  */
-const CTetPiece *ctEngine_getHeldPiece(CTetEngine *engine);
+const CTetPiece *ctEngine_getHeldPiece(const CTetEngine *engine);
 
 /**
  * Get a pointer to the block at a specified location on the game field.
@@ -384,7 +384,7 @@ const CTetPiece *ctEngine_getHeldPiece(CTetEngine *engine);
  * @param location The coordinates of the field location.
  * @return A pointer to the CTetBlock at the specified location.
  */
-const CTetBlock *ctEngine_getBlockAtFieldLocation(CTetEngine *engine, CTetPoint location);
+const CTetBlock *ctEngine_getBlockAtFieldLocation(const CTetEngine *engine, CTetPoint location);
 
 /**
  * Retrieves the current timestamp within the game's internal clock,

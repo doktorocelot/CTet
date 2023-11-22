@@ -1,5 +1,6 @@
 #include <memory.h>
 #include "next-queue.h"
+#include "piece.h"
 #include "../../math/prng.h"
 
 void nextQueue_genNewPieceAt(NextQueue *nextQueue, int i);
@@ -16,19 +17,19 @@ void nextQueue_reset(NextQueue *nextQueue) {
 }
 
 CTetPiece nextQueue_next(NextQueue *nextQueue) {
-    CTetPiece result = nextQueue->pieces[0];
+    const CTetPiece result = nextQueue->pieces[0];
     memmove(nextQueue->pieces, nextQueue->pieces + 1, (CT_NEXT_QUEUE_MAX_LENGTH - 1) * sizeof(CTetPiece));
     cycleSeed(&nextQueue->nextSeed);
     nextQueue_genNewPieceAt(nextQueue, CT_NEXT_QUEUE_MAX_LENGTH - 1);
     return result;
 }
 
-void nextQueue_genNewPieceAt(NextQueue *nextQueue, int i) {
-    uint64_t nextSeed = nextQueue->nextSeed;
+void nextQueue_genNewPieceAt(NextQueue *nextQueue, const int i) {
+    const uint64_t nextSeed = nextQueue->nextSeed;
 
     if (nextQueue->remainingPiecesInBag == 0) nextQueue_repopulateBag(nextQueue);
 
-    unsigned int selectedIndex = (unsigned int) nextSeed % nextQueue->remainingPiecesInBag;
+    const unsigned int selectedIndex = (unsigned int) nextSeed % nextQueue->remainingPiecesInBag;
 
     nextQueue->pieces[i] = piece_buildFromType(nextQueue->bag[selectedIndex]);
 

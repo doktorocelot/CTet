@@ -1,17 +1,17 @@
 #include <memory.h>
 #include "field.h"
 
-static CTetBlock field_getBlockAt(Field *field, CTetPoint coords);
+static CTetBlock field_getBlockAt(const Field *field, CTetPoint coords);
 
-void field_clear(Field *field) {
-    CTetBlock *matrixPtr = (CTetBlock *) field->matrix;
+void field_clear(const Field *field) {
+    CTetBlock *matrixPtr = field->matrix;
     for (int i = 0; i < CT_FIELD_WIDTH * CT_TOTAL_FIELD_HEIGHT; i++) {
         *matrixPtr = (CTetBlock) {.color = CTetBlockColor_NONE};
         matrixPtr++;
     }
 }
 
-CoordType field_coordTypeAt(Field *field, CTetPoint coords) {
+CoordType field_coordTypeAt(const Field *field, const CTetPoint coords) {
     if (coords.x < 0 ||
         coords.x >= CT_FIELD_WIDTH ||
         coords.y < 0)
@@ -24,17 +24,17 @@ CoordType field_coordTypeAt(Field *field, CTetPoint coords) {
     return CoordType_EMPTY;
 }
 
-void field_setBlockAt(Field *field, CTetBlock block, CTetPoint coords) {
+void field_setBlockAt(Field *field, const CTetBlock block, const CTetPoint coords) {
     if (coords.y >= CT_TOTAL_FIELD_HEIGHT || field_coordTypeAt(field, coords) == CoordType_OUT_OF_BOUNDS) return;
     field->matrix[coords.y][coords.x] = block;
 }
 
 
-CTetBlock field_getBlockAt(Field *field, CTetPoint coords) {
+CTetBlock field_getBlockAt(const Field *field, const CTetPoint coords) {
     return field->matrix[coords.y][coords.x];
 }
 
-void field_getFullRowHitList(Field *field, int *hitList) {
+void field_getFullRowHitList(const Field *field, int *hitList) {
     int hitListIndex = 0;
     for (int y = CT_TOTAL_FIELD_HEIGHT - 1; y >= 0; y--) {
         for (int x = 0; x <= CT_FIELD_WIDTH; x++) {
@@ -71,6 +71,6 @@ void field_collapseHitList(Field *field, const int *hitList) {
     }
 }
 
-void field_killRow(Field *field, int row) {
+void field_killRow(Field *field, const int row) {
     memset(field->matrix[row], 0, CT_FIELD_WIDTH * sizeof(CTetBlock));
 }

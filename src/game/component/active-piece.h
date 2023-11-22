@@ -2,7 +2,6 @@
 
 #include <stdbool.h>
 #include <ctet/ctet.h>
-#include "piece.h"
 #include "field.h"
 
 typedef struct {
@@ -23,13 +22,13 @@ bool activePiece_shift(ActivePiece *active, ShiftDirection direction);
 
 bool activePiece_dropOneLine(ActivePiece *active);
 
-bool activePiece_collidesWithOrientation(ActivePiece *active, CTetOrientation orientation, CTetPoint offset);
+bool activePiece_collidesWithOrientation(const ActivePiece *active, CTetOrientation orientation, CTetPoint offset);
 
-bool activePiece_collidesWith(ActivePiece *active, CTetPoint offset);
+bool activePiece_collidesWith(const ActivePiece *active, CTetPoint offset);
 
 void activePiece_slamToFloor(ActivePiece *active);
 
-int activePiece_getDistanceToGround(ActivePiece *active);
+int activePiece_getDistanceToGround(const ActivePiece *active);
 
 void activePiece_placeToField(ActivePiece *active, double lockTimestamp);
 

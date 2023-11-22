@@ -1,17 +1,16 @@
 #include "active-piece.h"
 
-#include <stdio.h>
-
+#include "piece.h"
 #include "../data/piece-data.h"
 #include "wallkick.h"
 
-void activePiece_newPiece(ActivePiece *active, CTetPiece piece) {
+void activePiece_newPiece(ActivePiece *active, const CTetPiece piece) {
     active->piece = piece;
     active->pos = pieceData_getSpawnLocation(piece.type);
     activePiece_dropOneLine(active);
 }
 
-bool activePiece_shift(ActivePiece *active, ShiftDirection direction) {
+bool activePiece_shift(ActivePiece *active, const ShiftDirection direction) {
     if (!activePiece_collidesWith(active, (CTetPoint) {direction, 0})) {
         active->pos.x += direction;
         return true;
@@ -25,8 +24,8 @@ bool activePiece_dropOneLine(ActivePiece *active) {
     return true;
 }
 
-bool activePiece_collidesWithOrientation(ActivePiece *active, CTetOrientation orientation, CTetPoint offset) {
-    CTetPoint *coordPtr = piece_getCoordsForOrientation(&active->piece, orientation);
+bool activePiece_collidesWithOrientation(const ActivePiece *active, const CTetOrientation orientation, const CTetPoint offset) {
+    const CTetPoint *coordPtr = piece_getCoordsForOrientation(&active->piece, orientation);
     for (int i = 0; i < CT_BLOCKS_PER_PIECE; i++) {
         if (field_coordTypeAt(active->field,
                               ctPoint_addToNew(ctPoint_addToNew(active->pos, offset), *coordPtr)
@@ -38,7 +37,7 @@ bool activePiece_collidesWithOrientation(ActivePiece *active, CTetOrientation or
     return false;
 }
 
-bool activePiece_collidesWith(ActivePiece *active, CTetPoint offset) {
+bool activePiece_collidesWith(const ActivePiece *active, const CTetPoint offset) {
     return activePiece_collidesWithOrientation(active, active->piece.orientation, offset);
 }
 
@@ -46,7 +45,7 @@ void activePiece_slamToFloor(ActivePiece *active) {
     active->pos.y -= activePiece_getDistanceToGround(active);
 }
 
-int activePiece_getDistanceToGround(ActivePiece *active) {
+int activePiece_getDistanceToGround(const ActivePiece *active) {
     int distance = 0;
     while (!activePiece_collidesWith(active, (CTetPoint) {0, -distance - 1})) {
         distance++;
@@ -54,7 +53,7 @@ int activePiece_getDistanceToGround(ActivePiece *active) {
     return distance;
 }
 
-void activePiece_placeToField(ActivePiece *active, double lockTimestamp) {
+void activePiece_placeToField(ActivePiece *active, const double lockTimestamp) {
     for (int i = 0; i < CT_BLOCKS_PER_PIECE; i++) {
         active->piece.blocks[i].lockedTimestamp = lockTimestamp;
         field_setBlockAt(active->field,
@@ -63,7 +62,7 @@ void activePiece_placeToField(ActivePiece *active, double lockTimestamp) {
     }
 }
 
-bool activePiece_rotate(ActivePiece *active, int amount) {
+bool activePiece_rotate(ActivePiece *active, const int amount) {
     CTetPoint wallkickResult;
     if (executeWallkick(&wallkickResult, active, amount)) {
         piece_rotate(&active->piece, amount);

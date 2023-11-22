@@ -2,7 +2,6 @@
 #include <time.h>
 #include <ctet/ctet.h>
 #include "../math/prng.h"
-#include "data/piece-data.h"
 
 #include "component/active-piece.h"
 #include "behavior/lockdown.h"
@@ -63,7 +62,7 @@ void ctEngine_reset(CTetEngine *engine) {
     engine->gravity = (Gravity) {.msPerRow = 1000};
 
     // Setup NEXT
-    engine->nextQueue = (NextQueue) {.nextSeed = (time(NULL) + retryCount * (retryCount % 10))};
+    engine->nextQueue = (NextQueue) {.nextSeed = time(NULL) + retryCount * (retryCount % 10)};
     retryCount++;
     nextQueue_reset(&engine->nextQueue);
 
@@ -80,7 +79,7 @@ void ctEngine_reset(CTetEngine *engine) {
     engine->timeElapsed = 0;
 }
 
-void ctEngine_update(CTetEngine *engine, float deltaMillis) {
+void ctEngine_update(CTetEngine *engine, const float deltaMillis) {
     
     int autoshiftResult;
     while (autoshiftResult = autoshift_update(&engine->autoshiftVars, deltaMillis), autoshiftResult) {
@@ -160,31 +159,31 @@ void ctEngine_onHoldDown(CTetEngine *engine) {
 
 }
 
-CTetPoint ctEngine_getActivePiecePos(CTetEngine *engine) {
+CTetPoint ctEngine_getActivePiecePos(const CTetEngine *engine) {
     return engine->active.pos;
 }
 
-CTetPoint ctEngine_getGhostOffset(CTetEngine *engine) {
+CTetPoint ctEngine_getGhostOffset(const CTetEngine *engine) {
     return (CTetPoint) {0, -activePiece_getDistanceToGround(&engine->active)};
 }
 
-const CTetPiece *ctEngine_getActivePiece(CTetEngine *engine) {
+const CTetPiece *ctEngine_getActivePiece(const CTetEngine *engine) {
     return &engine->active.piece;
 }
 
-float ctEngine_getLockDelayRemainingPercentage(CTetEngine *engine) {
+float ctEngine_getLockDelayRemainingPercentage(const CTetEngine *engine) {
     return lockdown_lockDelayRemaining(&engine->lockdown);
 }
 
-const CTetPiece *ctEngine_getNextPieces(CTetEngine *engine) {
+const CTetPiece *ctEngine_getNextPieces(const CTetEngine *engine) {
     return engine->nextQueue.pieces;
 }
 
-const CTetPiece *ctEngine_getHeldPiece(CTetEngine *engine) {
+const CTetPiece *ctEngine_getHeldPiece(const CTetEngine *engine) {
     return &engine->holdQueue.held;
 }
 
-const CTetBlock *ctEngine_getBlockAtFieldLocation(CTetEngine *engine, CTetPoint location) {
+const CTetBlock *ctEngine_getBlockAtFieldLocation(const CTetEngine *engine, const CTetPoint location) {
     return &engine->field.matrix[location.y][location.x];
 }
 
@@ -197,11 +196,11 @@ CTetMessage ctEngine_nextMessage(CTetEngine *engine) {
     return engine->messages[engine->msgPtr--];
 }
 
-void pushMessage(CTetEngine *engine, CTetMessageId id, int32_t detailA, int32_t detailB) {
+void pushMessage(CTetEngine *engine, const CTetMessageId id, const int32_t detailA, const int32_t detailB) {
     engine->messages[++engine->msgPtr] = (CTetMessage) {.id = id, .detailA = detailA, .detailB = detailB};
 }
 
-void spawnNextPiece(CTetEngine *engine, CTetPiece piece) {
+void spawnNextPiece(CTetEngine *engine, const CTetPiece piece) {
     activePiece_newPiece(&engine->active, piece);
     if (activePiece_collidesWith(&engine->active, (CTetPoint) {0})) {
         pushMessage(engine, CT_MSG_GAME_OVER, CT_GAME_OVER_TYPE_BLOCK_OUT, 0);
@@ -209,13 +208,13 @@ void spawnNextPiece(CTetEngine *engine, CTetPiece piece) {
     lockdown_onPieceSpawn(&engine->lockdown, &engine->active);
 }
 
-void shiftActive(CTetEngine *engine, ShiftDirection dir) {
+void shiftActive(CTetEngine *engine, const ShiftDirection dir) {
     if (activePiece_shift(&engine->active, dir)) {
         lockdown_onPieceManipulate(&engine->lockdown);
     }
 }
 
-void rotateActive(CTetEngine *engine, int amount) {
+void rotateActive(CTetEngine *engine, const int amount) {
     if (activePiece_rotate(&engine->active, amount)) {
         lockdown_onPieceManipulate(&engine->lockdown);
     }

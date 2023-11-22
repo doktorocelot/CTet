@@ -10,8 +10,8 @@ typedef struct {
 
 void holdQueue_reset(HoldQueue *holdQueue);
 
-bool holdQueue_performHold(HoldQueue *holdQueue, CTetPiece *dest, CTetPiece *src);
+bool holdQueue_performHold(HoldQueue *holdQueue, CTetPiece *dest, const CTetPiece *src);
 
 void holdQueue_onLock(HoldQueue *holdQueue);
 
-bool holdQueue_isLocked(HoldQueue *holdQueue);
+bool holdQueue_isLocked(const HoldQueue *holdQueue);

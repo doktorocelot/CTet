@@ -1,10 +1,9 @@
 #pragma once
 
-#include "../component/piece.h"
 #include <ctet/ctet.h>
 
 // Returns a pointer to the first coords (of four) of a certain piece type and orientation
-CTetPoint *pieceData_getCoords(CTetPieceType type, CTetOrientation orientation);
+const CTetPoint* pieceData_getCoords(CTetPieceType type, CTetOrientation orientation);
 
 CTetBlockColor pieceData_getColorForType(CTetPieceType type);
 

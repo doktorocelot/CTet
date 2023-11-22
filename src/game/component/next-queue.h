@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 #include <ctet/ctet.h>
-#include "piece.h"
 
 
 typedef struct {

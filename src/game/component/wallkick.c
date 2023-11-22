@@ -1,4 +1,5 @@
 #include "wallkick.h"
+#include "piece.h"
 
 // order:
 // starting orientation;
@@ -46,10 +47,10 @@ static const CTetPoint WALLKICK_DATA_NONE[5] = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-static CTetPoint *getWallkickData(CTetPiece *piece, int direction);
+static const CTetPoint *getWallkickData(const CTetPiece *piece, int direction);
 
-bool executeWallkick(CTetPoint *dest, ActivePiece *active, int direction) {
-    CTetPoint *wallkickData = getWallkickData(&active->piece, direction);
+bool executeWallkick(CTetPoint *dest, const ActivePiece *active, const int direction) {
+        const CTetPoint *wallkickData = getWallkickData(&active->piece, direction);
     for (int i = 0; i < 5; i++) {
         if (!activePiece_collidesWithOrientation(
                 active,
@@ -64,14 +65,14 @@ bool executeWallkick(CTetPoint *dest, ActivePiece *active, int direction) {
     return false;
 }
 
-CTetPoint *getWallkickData(CTetPiece *piece, int direction) {
-    int directionIndex = direction == CT_ROTATION_CCW ? 1 : 0;
+const CTetPoint *getWallkickData(const CTetPiece *piece, const int direction) {
+        const int directionIndex = direction == CT_ROTATION_CCW ? 1 : 0;
     switch (piece->type) {
         case CTetPieceType_O:
-            return (CTetPoint *) WALLKICK_DATA_NONE;
+            return WALLKICK_DATA_NONE;
         case CTetPieceType_I:
-            return (CTetPoint *) WALLKICK_DATA_I[piece->orientation][directionIndex];
+            return WALLKICK_DATA_I[piece->orientation][directionIndex];
         default:
-            return (CTetPoint *) WALLKICK_DATA_X[piece->orientation][directionIndex];
+            return WALLKICK_DATA_X[piece->orientation][directionIndex];
     }
 }
