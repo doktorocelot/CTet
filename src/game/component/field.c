@@ -3,7 +3,7 @@
 
 static CTetBlock field_getBlockAt(const Field *field, CTetPoint coords);
 
-void field_clear(const Field *field) {
+void field_clear(Field *field) {
     CTetBlock *matrixPtr = field->matrix;
     for (int i = 0; i < CT_FIELD_WIDTH * CT_TOTAL_FIELD_HEIGHT; i++) {
         *matrixPtr = (CTetBlock) {.color = CTetBlockColor_NONE};

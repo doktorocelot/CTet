@@ -13,7 +13,7 @@ typedef struct {
     CTetBlock matrix[CT_TOTAL_FIELD_HEIGHT][CT_FIELD_WIDTH]; // y first to make row operations easier
 } Field;
 
-void field_clear(const Field *field);
+void field_clear(Field *field);
 
 CoordType field_coordTypeAt(const Field *field, CTetPoint coords);
 
