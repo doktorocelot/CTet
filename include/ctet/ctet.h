@@ -378,6 +378,14 @@ const CTetPiece *ctEngine_getNextPieces(const CTetEngine *engine);
 const CTetPiece *ctEngine_getHeldPiece(const CTetEngine *engine);
 
 /**
+ * Check if the HOLD queue is locked in the CTetEngine.
+ *
+ * @param engine A pointer to the CTetEngine instance.
+ * @return True if the HOLD queue is locked, false otherwise.
+ */
+bool ctEngine_holdIsLocked(const CTetEngine *engine);
+
+/**
  * Get a pointer to the block at a specified location on the game field.
  *
  * @param engine   A pointer to the CTetEngine instance.

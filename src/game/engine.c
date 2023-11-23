@@ -183,6 +183,10 @@ const CTetPiece *ctEngine_getHeldPiece(const CTetEngine *engine) {
     return &engine->holdQueue.held;
 }
 
+bool ctEngine_holdIsLocked(const CTetEngine *engine) {
+    return holdQueue_isLocked(&engine->holdQueue);
+}
+
 const CTetBlock *ctEngine_getBlockAtFieldLocation(const CTetEngine *engine, const CTetPoint location) {
     return &engine->field.matrix[location.y][location.x];
 }
