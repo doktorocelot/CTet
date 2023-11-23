@@ -12,7 +12,6 @@ set(SOURCES
 
         src/game/data/piece-data.h src/game/data/piece-data.c
 
-        src/game/component/block.h src/game/component/block.c
         src/game/component/piece.h src/game/component/piece.c
         src/game/component/active-piece.h src/game/component/active-piece.c
         src/game/component/field.h src/game/component/field.c
