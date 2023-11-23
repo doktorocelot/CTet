@@ -20,7 +20,8 @@ struct CTetEngine {
     ActivePiece active;
     double timeElapsed;
     CTetMessage messages[256];
-    int msgPtr;
+    int msgInsertPtr;
+    int msgPullPtr;
 };
 
 static int retryCount = 0;
@@ -35,6 +36,11 @@ static void shiftActive(CTetEngine *engine, ShiftDirection dir);
 
 static void rotateActive(CTetEngine *engine, int amount);
 
+static void clearEngineMsgPtrs(CTetEngine *engine) {
+    engine->msgInsertPtr = 0;
+    engine->msgPullPtr = 0;
+}
+
 CTetEngine *ctEngine_create() {
     CTetEngine *engine = malloc(sizeof(CTetEngine));
 
@@ -42,7 +48,7 @@ CTetEngine *ctEngine_create() {
 
     ctEngine_reset(engine);
 
-    engine->msgPtr = -1;
+    clearEngineMsgPtrs(engine);
 
     return engine;
 }
@@ -80,7 +86,6 @@ void ctEngine_reset(CTetEngine *engine) {
 }
 
 void ctEngine_update(CTetEngine *engine, const float deltaMillis) {
-    
     int autoshiftResult;
     while (autoshiftResult = autoshift_update(&engine->autoshiftVars, deltaMillis), autoshiftResult) {
         shiftActive(engine, autoshiftResult);
@@ -156,7 +161,6 @@ void ctEngine_onHoldDown(CTetEngine *engine) {
         if (holdReturn.type == CTetPieceType_NONE) spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
         else spawnNextPiece(engine, holdReturn);
     }
-
 }
 
 CTetPoint ctEngine_getActivePiecePos(const CTetEngine *engine) {
@@ -196,12 +200,18 @@ double ctEngine_getTimestamp(const CTetEngine *engine) {
 }
 
 CTetMessage ctEngine_nextMessage(CTetEngine *engine) {
-    if (engine->msgPtr < 0) return (CTetMessage) {.id = CT_MSG_NONE};
-    return engine->messages[engine->msgPtr--];
+    if (engine->msgInsertPtr == 0) {
+        return (CTetMessage) {.id = CT_MSG_NONE};
+    }
+    if (engine->msgInsertPtr == engine->msgPullPtr) {
+        clearEngineMsgPtrs(engine);
+        return (CTetMessage) {.id = CT_MSG_NONE};
+    }
+    return engine->messages[engine->msgPullPtr++];
 }
 
 void pushMessage(CTetEngine *engine, const CTetMessageId id, const int32_t detailA, const int32_t detailB) {
-    engine->messages[++engine->msgPtr] = (CTetMessage) {.id = id, .detailA = detailA, .detailB = detailB};
+    engine->messages[engine->msgInsertPtr++] = (CTetMessage) {.id = id, .detailA = detailA, .detailB = detailB};
 }
 
 void spawnNextPiece(CTetEngine *engine, const CTetPiece piece) {
