@@ -12,7 +12,10 @@ CTetPiece piece_buildFromType(const CTetPieceType type) {
 
     const CTetBlockColor color = pieceData_getColorForType(type);
     for (int i = 0; i < CT_BLOCKS_PER_PIECE; i++) {
-        piece.blocks[i] = (CTetBlock) {.color = color};
+        piece.blocks[i] = (CTetBlock) {
+            .color = color,
+            .lockedTimestamp = BLOCK_TIMESTAMP_NOT_LOCKED,
+        };
     }
 
     return piece;

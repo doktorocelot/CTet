@@ -118,6 +118,8 @@ typedef struct {
     double lockedTimestamp;
 } CTetBlock;
 
+#define BLOCK_TIMESTAMP_NOT_LOCKED -1
+
 // ===========
 // Pieces
 // ===========
