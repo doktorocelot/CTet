@@ -227,18 +227,24 @@ typedef struct  {
 } CTetMessage;
 
 /**
- * Create a new CTetEngine instance. This instance must eventually be destroyed.
- *
- * @return A pointer to the newly created Engine instance.
+ * @brief Initialize a CTetEngine.
+ * 
+ * This function initializes a CTetEngine by setting up its various components and resetting them to their initial states.
+ * 
+ * @param engine A pointer to a CTetEngine object.
  */
-CTetEngine *ctEngine_create();
+void ctEngine_init(CTetEngine *engine); 
 
 /**
- * Destroy an CTetEngine instance.
+ * @brief Get the size of the CTetEngine struct.
+ * 
+ * This function returns the size of the CTetEngine struct in bytes.
+ * The CTetEngine struct is used in the CTet game engine.
+ * 
+ * @return The size of the CTetEngine struct in bytes.
  *
- * @param engine A pointer to the Engine instance to be destroyed.
  */
-void ctEngine_destroy(CTetEngine *engine);
+size_t ctEngine_getSize();
 
 /**
  * Reset the CTetEngine to its initial state.

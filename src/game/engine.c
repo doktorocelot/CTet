@@ -41,20 +41,10 @@ static void clearEngineMsgPtrs(CTetEngine *engine) {
     engine->msgPullPtr = 0;
 }
 
-CTetEngine *ctEngine_create() {
-    CTetEngine *engine = malloc(sizeof(CTetEngine));
-
+void ctEngine_init(CTetEngine *engine) {
     engine->active.field = &engine->field;
-
     ctEngine_reset(engine);
-
     clearEngineMsgPtrs(engine);
-
-    return engine;
-}
-
-void ctEngine_destroy(CTetEngine *engine) {
-    free(engine);
 }
 
 void ctEngine_reset(CTetEngine *engine) {
@@ -208,6 +198,10 @@ CTetMessage ctEngine_nextMessage(CTetEngine *engine) {
         return (CTetMessage) {.id = CT_MSG_NONE};
     }
     return engine->messages[engine->msgPullPtr++];
+}
+
+size_t ctEngine_getSize() {
+    return sizeof(CTetEngine);
 }
 
 void pushMessage(CTetEngine *engine, const CTetMessageId id, const int32_t detailA, const int32_t detailB) {
