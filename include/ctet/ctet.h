@@ -229,6 +229,7 @@ typedef struct {
 typedef struct {
     int lines;
     int score;
+    int pieces;
 } CTetStats;
 
 /**

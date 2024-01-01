@@ -125,6 +125,8 @@ void lockdown(CTetEngine *engine) {
     activePiece_placeToField(&engine->active, engine->timeElapsed);
     holdQueue_onLock(&engine->holdQueue);
 
+    engine->stats.pieces++;
+
     int hitList[CT_TOTAL_FIELD_HEIGHT + 1];
     int lines = 0;
     field_getFullRowHitList(&engine->field, hitList, &lines);
