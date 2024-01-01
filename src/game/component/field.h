@@ -19,7 +19,7 @@ CoordType field_coordTypeAt(const Field *field, CTetPoint coords);
 
 void field_setBlockAt(Field *field, CTetBlock block, CTetPoint coords);
 
-void field_getFullRowHitList(const Field *field, int *hitList);
+void field_getFullRowHitList(const Field *field, int *hitList, int *totalLines);
 
 void field_killHitList(Field *field, const int *hitList);
 

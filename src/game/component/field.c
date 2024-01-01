@@ -30,7 +30,7 @@ CTetBlock field_getBlockAt(const Field *field, const CTetPoint coords) {
     return field->matrix[coords.y][coords.x];
 }
 
-void field_getFullRowHitList(const Field *field, int *hitList) {
+void field_getFullRowHitList(const Field *field, int *hitList, int *totalLines) {
     int hitListIndex = 0;
     for (int y = CT_TOTAL_FIELD_HEIGHT - 1; y >= 0; y--) {
         for (int x = 0; x <= CT_FIELD_WIDTH; x++) {
@@ -43,6 +43,7 @@ void field_getFullRowHitList(const Field *field, int *hitList) {
         }
     }
     hitList[hitListIndex] = HIT_LIST_END;
+    *totalLines = hitListIndex;
 }
 
 static void field_killRow(Field *field, int row);

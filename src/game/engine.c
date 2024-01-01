@@ -22,6 +22,7 @@ struct CTetEngine {
     CTetMessage messages[256];
     int msgInsertPtr;
     int msgPullPtr;
+    CTetStats stats;
 };
 
 static int retryCount = 0;
@@ -73,6 +74,9 @@ void ctEngine_reset(CTetEngine *engine) {
 
     // Reset Time Elapsed
     engine->timeElapsed = 0;
+
+    // Reset Stats
+    engine->stats = (CTetStats) {0};
 }
 
 void ctEngine_update(CTetEngine *engine, const float deltaMillis) {
@@ -122,9 +126,12 @@ void lockdown(CTetEngine *engine) {
     holdQueue_onLock(&engine->holdQueue);
 
     int hitList[CT_TOTAL_FIELD_HEIGHT + 1];
-    field_getFullRowHitList(&engine->field, hitList);
+    int lines = 0;
+    field_getFullRowHitList(&engine->field, hitList, &lines);
     field_killHitList(&engine->field, hitList);
     field_collapseHitList(&engine->field, hitList);
+
+    engine->stats.lines += lines;
 
     spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
 }
@@ -202,6 +209,10 @@ CTetMessage ctEngine_nextMessage(CTetEngine *engine) {
 
 size_t ctEngine_getSize() {
     return sizeof(CTetEngine);
+}
+
+const CTetStats *ctEngine_getStats(const CTetEngine *engine) {
+    return &engine->stats;
 }
 
 void pushMessage(CTetEngine *engine, const CTetMessageId id, const int32_t detailA, const int32_t detailB) {

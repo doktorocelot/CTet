@@ -220,11 +220,16 @@ typedef struct CTetEngine CTetEngine;
 
 typedef int CTetMessageId;
 
-typedef struct  {
+typedef struct {
     CTetMessageId id;
     int32_t detailA;
     int32_t detailB;
 } CTetMessage;
+
+typedef struct {
+    int lines;
+    int score;
+} CTetStats;
 
 /**
  * @brief Initialize a CTetEngine.
@@ -410,6 +415,14 @@ const CTetBlock *ctEngine_getBlockAtFieldLocation(const CTetEngine *engine, CTet
  * @return The current timestamp as a double, representing time in millis.
  */
 double ctEngine_getTimestamp(const CTetEngine *engine);
+
+/**
+ * Retrieves a pointer to the stats data of the CTetEngine instance
+ * 
+ * @param engine A pointer to the CTetEngine instance.
+ * @return A pointer to the stats.
+ */
+const CTetStats *ctEngine_getStats(const CTetEngine *engine);
 
 // ===========
 // Messages
