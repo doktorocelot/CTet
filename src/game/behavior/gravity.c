@@ -6,7 +6,7 @@ int gravity_update(Gravity *gravity, ActivePiece *activePiece, const float delta
         return 0;
     }
     if (gravity->msPerRow < 0) {
-        activePiece_slamToFloor(activePiece);
+        activePiece_slamToFloor(activePiece, NULL);
         return 0;
     }
     if (gravity->gravityAccumulator >= 1) {

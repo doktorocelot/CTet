@@ -143,8 +143,10 @@ void ctEngine_onShiftLeftUp(CTetEngine *engine) {
 }
 
 void ctEngine_onHardDrop(CTetEngine *engine) {
-    activePiece_slamToFloor(&engine->active);
+    int distance;
+    activePiece_slamToFloor(&engine->active, &distance);
     lockdown(engine);
+    engine->stats.score += distance * 2;
 }
 
 void ctEngine_onRotateLeft(CTetEngine *engine) {

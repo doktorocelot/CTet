@@ -26,7 +26,7 @@ bool activePiece_collidesWithOrientation(const ActivePiece *active, CTetOrientat
 
 bool activePiece_collidesWith(const ActivePiece *active, CTetPoint offset);
 
-void activePiece_slamToFloor(ActivePiece *active);
+void activePiece_slamToFloor(ActivePiece *active, int *distanceOut);
 
 int activePiece_getDistanceToGround(const ActivePiece *active);
 

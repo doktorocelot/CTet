@@ -41,8 +41,10 @@ bool activePiece_collidesWith(const ActivePiece *active, const CTetPoint offset)
     return activePiece_collidesWithOrientation(active, active->piece.orientation, offset);
 }
 
-void activePiece_slamToFloor(ActivePiece *active) {
-    active->pos.y -= activePiece_getDistanceToGround(active);
+void activePiece_slamToFloor(ActivePiece *active, int *distanceOut) {
+    const int distance = activePiece_getDistanceToGround(active);
+    active->pos.y -= distance;
+    if (distanceOut != NULL) *distanceOut = distance; 
 }
 
 int activePiece_getDistanceToGround(const ActivePiece *active) {
