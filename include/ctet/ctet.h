@@ -230,6 +230,7 @@ typedef struct {
     int lines;
     int score;
     int pieces;
+    int level;
 } CTetStats;
 
 /**

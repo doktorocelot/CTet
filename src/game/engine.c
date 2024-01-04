@@ -10,6 +10,8 @@
 #include "behavior/gravity.h"
 #include "behavior/autoshift.h"
 
+#include <math.h>
+
 struct CTetEngine {
     Field field;
     AutoshiftVars autoshiftVars;
@@ -76,7 +78,7 @@ void ctEngine_reset(CTetEngine *engine) {
     engine->timeElapsed = 0;
 
     // Reset Stats
-    engine->stats = (CTetStats) {0};
+    engine->stats = (CTetStats) {.level = 1};
 }
 
 void ctEngine_update(CTetEngine *engine, const float deltaMillis) {
@@ -134,6 +136,13 @@ void lockdown(CTetEngine *engine) {
     field_collapseHitList(&engine->field, hitList);
 
     engine->stats.lines += lines;
+
+    engine->stats.level = engine->stats.lines / 10 + 1;
+
+    const float x = engine->stats.level;
+    float fallSpeed = pow((0.8f - ((x - 1.0f) * 0.007f)), (x - 1.0f));
+    fallSpeed *= 1000;
+    engine->gravity.msPerRow = fallSpeed;
 
     spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
 }
