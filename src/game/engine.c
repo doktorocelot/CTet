@@ -89,6 +89,7 @@ void ctEngine_update(CTetEngine *engine, const float deltaMillis) {
 
     int gravityResult;
     while (gravityResult = gravity_update(&engine->gravity, &engine->active, deltaMillis), gravityResult) {
+        if (engine->gravity.softDropIsDown) engine->stats.score++;
         if (!activePiece_dropOneLine(&engine->active)) {
             gravity_onHitFloor(&engine->gravity);
         }
