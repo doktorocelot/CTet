@@ -117,7 +117,7 @@ void lockdown(CTetEngine *engine) {
     engine->stats.level = engine->stats.lines / 10 + 1;
 
     const float x = engine->stats.level;
-    float fallSpeed = pow((0.8f - ((x - 1.0f) * 0.007f)), (x - 1.0f));
+    float fallSpeed = pow(0.8f - (x - 1.0f) * 0.007f, x - 1.0f);
     fallSpeed *= 1000;
     engine->gravity.msPerRow = fallSpeed;
 
