@@ -100,6 +100,10 @@ void ctEngine_update(CTetEngine *engine, const float deltaMillis) {
     engine->timeElapsed += deltaMillis;
 }
 
+static int scoreLineLut[] = {
+    0, 100, 300, 500, 800
+};
+
 void lockdown(CTetEngine *engine) {
     activePiece_placeToField(&engine->active, engine->timeElapsed);
     holdQueue_onLock(&engine->holdQueue);
@@ -113,8 +117,8 @@ void lockdown(CTetEngine *engine) {
     field_collapseHitList(&engine->field, hitList);
 
     engine->stats.lines += lines;
-
     engine->stats.level = engine->stats.lines / 10 + 1;
+    engine->stats.score += scoreLineLut[lines] * engine->stats.level;
 
     const float x = engine->stats.level;
     float fallSpeed = pow(0.8f - (x - 1.0f) * 0.007f, x - 1.0f);
