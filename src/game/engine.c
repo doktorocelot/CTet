@@ -100,29 +100,6 @@ void ctEngine_update(CTetEngine *engine, const float deltaMillis) {
     engine->timeElapsed += deltaMillis;
 }
 
-void ctEngine_onShiftRightDown(CTetEngine *engine) {
-    shiftActive(engine, ShiftDirection_RIGHT);
-    autoshift_onPress(&engine->autoshiftVars, ShiftDirection_RIGHT);
-}
-
-void ctEngine_onShiftRightUp(CTetEngine *engine) {
-    autoshift_onRelease(&engine->autoshiftVars, ShiftDirection_RIGHT);
-}
-
-void ctEngine_onShiftLeftDown(CTetEngine *engine) {
-    shiftActive(engine, ShiftDirection_LEFT);
-    autoshift_onPress(&engine->autoshiftVars, ShiftDirection_LEFT);
-}
-
-void ctEngine_onShiftLeftUp(CTetEngine *engine) {
-    autoshift_onRelease(&engine->autoshiftVars, ShiftDirection_LEFT);
-}
-
-void ctEngine_onHardDrop(CTetEngine *engine) {
-    activePiece_slamToFloor(&engine->active);
-    lockdown(engine);
-}
-
 void lockdown(CTetEngine *engine) {
     activePiece_placeToField(&engine->active, engine->timeElapsed);
     holdQueue_onLock(&engine->holdQueue);
@@ -145,6 +122,29 @@ void lockdown(CTetEngine *engine) {
     engine->gravity.msPerRow = fallSpeed;
 
     spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
+}
+
+void ctEngine_onShiftRightDown(CTetEngine *engine) {
+    shiftActive(engine, ShiftDirection_RIGHT);
+    autoshift_onPress(&engine->autoshiftVars, ShiftDirection_RIGHT);
+}
+
+void ctEngine_onShiftRightUp(CTetEngine *engine) {
+    autoshift_onRelease(&engine->autoshiftVars, ShiftDirection_RIGHT);
+}
+
+void ctEngine_onShiftLeftDown(CTetEngine *engine) {
+    shiftActive(engine, ShiftDirection_LEFT);
+    autoshift_onPress(&engine->autoshiftVars, ShiftDirection_LEFT);
+}
+
+void ctEngine_onShiftLeftUp(CTetEngine *engine) {
+    autoshift_onRelease(&engine->autoshiftVars, ShiftDirection_LEFT);
+}
+
+void ctEngine_onHardDrop(CTetEngine *engine) {
+    activePiece_slamToFloor(&engine->active);
+    lockdown(engine);
 }
 
 void ctEngine_onRotateLeft(CTetEngine *engine) {
