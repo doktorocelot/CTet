@@ -78,7 +78,7 @@ void ctEngine_reset(CTetEngine *engine) {
     engine->timeElapsed = 0;
 
     // Reset Stats
-    engine->stats = (CTetStats) {.level = 1, .lines = 290};
+    engine->stats = (CTetStats) {.level = 1};
 }
 
 void ctEngine_update(CTetEngine *engine, const float deltaMillis) {
