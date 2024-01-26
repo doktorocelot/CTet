@@ -106,6 +106,8 @@ typedef enum {
     CTetBlockColor_BLUE,
     // Purple color.
     CTetBlockColor_PURPLE,
+    // Bone block.
+    CTetBlockColor_BONE,
 } CTetBlockColor;
 
 /**

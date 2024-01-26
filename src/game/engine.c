@@ -69,7 +69,7 @@ void ctEngine_reset(CTetEngine *engine) {
     holdQueue_reset(&engine->holdQueue);
 
     // Setup Lockdown
-    engine->lockdown = (Lockdown) {0};
+    engine->lockdown = (Lockdown) {500};
 
     // Setup ActivePiece
     spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
@@ -78,7 +78,7 @@ void ctEngine_reset(CTetEngine *engine) {
     engine->timeElapsed = 0;
 
     // Reset Stats
-    engine->stats = (CTetStats) {.level = 1};
+    engine->stats = (CTetStats) {.level = 1, .lines = 290};
 }
 
 void ctEngine_update(CTetEngine *engine, const float deltaMillis) {
@@ -124,9 +124,19 @@ void lockdown(CTetEngine *engine) {
     const float x = engine->stats.level;
     float fallSpeed = pow(0.8f - (x - 1.0f) * 0.007f, x - 1.0f);
     fallSpeed *= 1000;
+    if (engine->stats.level > 20) {
+        const float i = x - 20;
+        float lockDelay = 500 - 10 * i;
+        engine->lockdown.lockDelay = lockDelay;
+    }
     engine->gravity.msPerRow = fallSpeed;
 
     spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
+    if (engine->stats.level >= 30) {
+        for (int i = 0; i < CT_BLOCKS_PER_PIECE; i++) {
+            engine->nextQueue.pieces[4].blocks[i].color = CTetBlockColor_BONE;
+        }
+    }
 }
 
 void ctEngine_onShiftRightDown(CTetEngine *engine) {

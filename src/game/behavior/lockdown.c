@@ -46,10 +46,10 @@ void lockdown_resetVars(Lockdown *lockdown) {
 }
 
 bool lockdown_shouldLock(const Lockdown *lockdown, const ActivePiece *activePiece) {
-    return (lockdown->lockDelayAcc >= LOCK_DELAY || lockdown->shouldForceLockPiece)
+    return (lockdown->lockDelayAcc >= lockdown->lockDelay || lockdown->shouldForceLockPiece)
            && activePiece_collidesWith(activePiece, (CTetPoint) {0, -1});
 }
 
 float lockdown_lockDelayRemaining(const Lockdown *lockdown) {
-    return 1 - lockdown->lockDelayAcc / LOCK_DELAY;
+    return 1 - lockdown->lockDelayAcc / lockdown->lockDelay;
 }

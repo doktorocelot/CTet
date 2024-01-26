@@ -3,10 +3,10 @@
 #include <stdbool.h>
 #include "../component/active-piece.h"
 
-#define LOCK_DELAY 500
 #define MANIPULATION_LIMIT 15
 
 typedef struct {
+    float lockDelay;
     float lockDelayAcc;
     int pieceLowestY;
     int pieceManipulations;
