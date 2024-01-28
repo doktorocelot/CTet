@@ -459,6 +459,16 @@ CTetMessage ctEngine_nextMessage(CTetEngine *engine);
  */
 #define CT_GAME_OVER_TYPE_BLOCK_OUT 0x0
 
+/**
+ * The player has hard dropped. DetailA & DetailB is unused.
+ */
+#define CT_MSG_HARD_DROP 0x2
+
+/**
+ * The piece has locked to the board. DetailA & DetailB is unused.
+ */
+#define CT_MSG_LOCKDOWN 0x3
+
 /*******************
 End
 *******************/

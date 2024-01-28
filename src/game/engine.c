@@ -107,6 +107,7 @@ static int scoreLineLut[] = {
 
 void lockdown(CTetEngine *engine) {
     activePiece_placeToField(&engine->active, engine->timeElapsed);
+    pushMessage(engine, CT_MSG_LOCKDOWN, 0, 0);
     holdQueue_onLock(&engine->holdQueue);
 
     engine->stats.pieces++;
@@ -162,6 +163,7 @@ void ctEngine_onHardDrop(CTetEngine *engine) {
     activePiece_slamToFloor(&engine->active, &distance);
     lockdown(engine);
     engine->stats.score += distance * 2;
+    pushMessage(engine, CT_MSG_HARD_DROP, 0, 0);
 }
 
 void ctEngine_onRotateLeft(CTetEngine *engine) {
