@@ -469,6 +469,11 @@ CTetMessage ctEngine_nextMessage(CTetEngine *engine);
  */
 #define CT_MSG_LOCKDOWN 0x3
 
+/**
+ * The piece has shifted laterally. DetailA & DetailB is unused.
+ */
+#define CT_MSG_SHIFT 0x4
+
 /*******************
 End
 *******************/

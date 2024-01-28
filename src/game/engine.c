@@ -259,6 +259,7 @@ void spawnNextPiece(CTetEngine *engine, const CTetPiece piece) {
 
 void shiftActive(CTetEngine *engine, const ShiftDirection dir) {
     if (activePiece_shift(&engine->active, dir)) {
+        pushMessage(engine, CT_MSG_SHIFT, 0, 0);
         lockdown_onPieceManipulate(&engine->lockdown);
     }
 }
