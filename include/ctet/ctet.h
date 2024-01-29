@@ -474,6 +474,21 @@ CTetMessage ctEngine_nextMessage(CTetEngine *engine);
  */
 #define CT_MSG_SHIFT 0x4
 
+/**
+ * The piece has rotate. DetailA & DetailB is unused.
+ */
+#define CT_MSG_ROTATE 0x5
+
+/**
+ * The player has held a piece. DetailA & DetailB is unused.
+ */
+#define CT_MSG_HOLD 0x6
+
+/**
+ * The player has cleared lines. DetailA is the number of lines. DetailB is unused.
+ */
+#define CT_MSG_CLEAR_LINE 0x7
+
 /*******************
 End
 *******************/

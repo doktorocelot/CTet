@@ -119,6 +119,9 @@ void lockdown(CTetEngine *engine) {
     field_collapseHitList(&engine->field, hitList);
 
     engine->stats.lines += lines;
+    if (lines > 0) {
+        pushMessage(engine, CT_MSG_CLEAR_LINE, lines, 0);
+    }
     engine->stats.level = engine->stats.lines / 10 + 1;
     engine->stats.score += scoreLineLut[lines] * engine->stats.level;
 
@@ -185,6 +188,7 @@ void ctEngine_onSoftDropUp(CTetEngine *engine) {
 void ctEngine_onHoldDown(CTetEngine *engine) {
     CTetPiece holdReturn;
     if (holdQueue_performHold(&engine->holdQueue, &holdReturn, &engine->active.piece)) {
+        pushMessage(engine, CT_MSG_HOLD, 0, 0);
         if (holdReturn.type == CTetPieceType_NONE) spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
         else spawnNextPiece(engine, holdReturn);
     }
@@ -267,5 +271,6 @@ void shiftActive(CTetEngine *engine, const ShiftDirection dir) {
 void rotateActive(CTetEngine *engine, const int amount) {
     if (activePiece_rotate(&engine->active, amount)) {
         lockdown_onPieceManipulate(&engine->lockdown);
+        pushMessage(engine, CT_MSG_ROTATE, 0, 0);
     }
 }
