@@ -11,6 +11,12 @@
 #include "behavior/autoshift.h"
 
 #include <math.h>
+#include <stdio.h>
+
+typedef enum {
+    EngineState_NORMAL,
+    EngineState_ENTRY_DELAY,
+} EngineState;
 
 struct CTetEngine {
     Field field;
@@ -20,6 +26,11 @@ struct CTetEngine {
     HoldQueue holdQueue;
     Lockdown lockdown;
     ActivePiece active;
+    float entryDelay;
+    float entryDelayAccumulator;
+    int hitList[CT_TOTAL_FIELD_HEIGHT + 1];
+    int bufferedRotate;
+    bool bufferedHold;
     double timeElapsed;
     CTetMessage messages[256];
     int msgInsertPtr;
@@ -38,6 +49,8 @@ static void lockdown(CTetEngine *engine);
 static void shiftActive(CTetEngine *engine, ShiftDirection dir);
 
 static void rotateActive(CTetEngine *engine, int amount);
+
+static void resetHitList(CTetEngine *engine) { engine->hitList[0] = HIT_LIST_END; }
 
 static void clearEngineMsgPtrs(CTetEngine *engine) {
     engine->msgInsertPtr = 0;
@@ -77,16 +90,66 @@ void ctEngine_reset(CTetEngine *engine) {
     // Reset Time Elapsed
     engine->timeElapsed = 0;
 
+    // Entry delay
+    engine->entryDelay = 100.0f;
+    engine->entryDelayAccumulator = 0;
+
+    // Buffering
+    engine->bufferedRotate = 0;
+    engine->bufferedHold = false;
+
+    // Line hitlist
+    resetHitList(engine);
+
     // Reset Stats
     engine->stats = (CTetStats) {.level = 1};
 }
 
 void ctEngine_update(CTetEngine *engine, const float deltaMillis) {
+    engine->timeElapsed += deltaMillis;
     int autoshiftResult;
+    if (engine->active.piece.type == CTetPieceType_NONE) {
+        // Entry delay
+        if (engine->entryDelayAccumulator < engine->entryDelay) {
+            if (engine->entryDelayAccumulator >= 0) {
+                if (engine->hitList[0] != HIT_LIST_END) {
+                    field_collapseHitList(&engine->field, engine->hitList);
+                    pushMessage(engine, CT_MSG_COLLAPSE, 0, 0);
+                    resetHitList(engine);
+                }
+            }
+            engine->entryDelayAccumulator += deltaMillis;
+            
+            // Pre autoshift
+            while (autoshiftResult = autoshift_update(&engine->autoshiftVars, deltaMillis), autoshiftResult) {};
+            
+            return;
+        }
+
+        // Entry delay expired
+        engine->entryDelayAccumulator = 0;
+        CTetPiece holdReturn = (CTetPiece) {.type = CTetPieceType_NONE};
+        CTetPiece nextPiece = nextQueue_next(&engine->nextQueue);
+        if (engine->bufferedHold) {
+            if (holdQueue_performHold(&engine->holdQueue, &holdReturn, &nextPiece)) {
+                pushMessage(engine, CT_MSG_BUFFERED_HOLD, 0, 0);
+                if (holdReturn.type == CTetPieceType_NONE) nextPiece = nextQueue_next(&engine->nextQueue);
+            }
+        }
+        const CTetPiece pieceToSpawn = holdReturn.type == CTetPieceType_NONE ? nextPiece : holdReturn;
+        spawnNextPiece(engine, pieceToSpawn);
+        if (engine->stats.level >= 30) {
+            for (int i = 0; i < CT_BLOCKS_PER_PIECE; i++) {
+                engine->nextQueue.pieces[4].blocks[i].color = CTetBlockColor_BONE;
+            }
+        }
+    }
+    // Autoshift
     while (autoshiftResult = autoshift_update(&engine->autoshiftVars, deltaMillis), autoshiftResult) {
         shiftActive(engine, autoshiftResult);
     }
 
+    // Gravity
     int gravityResult;
     while (gravityResult = gravity_update(&engine->gravity, &engine->active, deltaMillis), gravityResult) {
         if (engine->gravity.softDropIsDown) engine->stats.score++;
@@ -95,10 +158,10 @@ void ctEngine_update(CTetEngine *engine, const float deltaMillis) {
         }
     }
 
+    // Lock delay
     if (lockdown_update(&engine->lockdown, &engine->active, deltaMillis)) {
         lockdown(engine);
     }
-    engine->timeElapsed += deltaMillis;
 }
 
 static int scoreLineLut[] = {
@@ -112,14 +175,13 @@ void lockdown(CTetEngine *engine) {
 
     engine->stats.pieces++;
 
-    int hitList[CT_TOTAL_FIELD_HEIGHT + 1];
     int lines = 0;
-    field_getFullRowHitList(&engine->field, hitList, &lines);
-    field_killHitList(&engine->field, hitList);
-    field_collapseHitList(&engine->field, hitList);
+    field_getFullRowHitList(&engine->field, engine->hitList, &lines);
+    field_killHitList(&engine->field, engine->hitList);
 
     engine->stats.lines += lines;
     if (lines > 0) {
+        engine->entryDelayAccumulator = -200;
         pushMessage(engine, CT_MSG_CLEAR_LINE, lines, 0);
     }
     engine->stats.level = engine->stats.lines / 10 + 1;
@@ -130,22 +192,17 @@ void lockdown(CTetEngine *engine) {
     fallSpeed *= 1000;
     if (engine->stats.level > 20) {
         const float i = x - 20;
-        float lockDelay = 500 - 10 * i;
+        const float lockDelay = 500 - 10 * i;
         engine->lockdown.lockDelay = lockDelay;
     }
     engine->gravity.msPerRow = fallSpeed;
-
-    spawnNextPiece(engine, nextQueue_next(&engine->nextQueue));
-    if (engine->stats.level >= 30) {
-        for (int i = 0; i < CT_BLOCKS_PER_PIECE; i++) {
-            engine->nextQueue.pieces[4].blocks[i].color = CTetBlockColor_BONE;
-        }
-    }
+    engine->active.piece = (CTetPiece){.type = CTetPieceType_NONE};
 }
 
 void ctEngine_onShiftRightDown(CTetEngine *engine) {
-    shiftActive(engine, ShiftDirection_RIGHT);
     autoshift_onPress(&engine->autoshiftVars, ShiftDirection_RIGHT);
+    if (engine->active.piece.type == CTetPieceType_NONE) return;
+    shiftActive(engine, ShiftDirection_RIGHT);
 }
 
 void ctEngine_onShiftRightUp(CTetEngine *engine) {
@@ -153,8 +210,9 @@ void ctEngine_onShiftRightUp(CTetEngine *engine) {
 }
 
 void ctEngine_onShiftLeftDown(CTetEngine *engine) {
-    shiftActive(engine, ShiftDirection_LEFT);
     autoshift_onPress(&engine->autoshiftVars, ShiftDirection_LEFT);
+    if (engine->active.piece.type == CTetPieceType_NONE) return;
+    shiftActive(engine, ShiftDirection_LEFT);
 }
 
 void ctEngine_onShiftLeftUp(CTetEngine *engine) {
@@ -162,6 +220,7 @@ void ctEngine_onShiftLeftUp(CTetEngine *engine) {
 }
 
 void ctEngine_onHardDrop(CTetEngine *engine) {
+    if (engine->active.piece.type == CTetPieceType_NONE) return;
     int distance;
     activePiece_slamToFloor(&engine->active, &distance);
     lockdown(engine);
@@ -170,10 +229,18 @@ void ctEngine_onHardDrop(CTetEngine *engine) {
 }
 
 void ctEngine_onRotateLeft(CTetEngine *engine) {
+    if (engine->active.piece.type == CTetPieceType_NONE) {
+        engine->bufferedRotate += CT_ROTATION_CCW;
+        return;
+    }
     rotateActive(engine, CT_ROTATION_CCW);
 }
 
 void ctEngine_onRotateRight(CTetEngine *engine) {
+    if (engine->active.piece.type == CTetPieceType_NONE) {
+        engine->bufferedRotate += CT_ROTATION_CW;
+        return;
+    }
     rotateActive(engine, CT_ROTATION_CW);
 }
 
@@ -186,6 +253,10 @@ void ctEngine_onSoftDropUp(CTetEngine *engine) {
 }
 
 void ctEngine_onHoldDown(CTetEngine *engine) {
+    if (engine->active.piece.type == CTetPieceType_NONE) {
+        engine->bufferedHold = true;
+        return;
+    }
     CTetPiece holdReturn;
     if (holdQueue_performHold(&engine->holdQueue, &holdReturn, &engine->active.piece)) {
         pushMessage(engine, CT_MSG_HOLD, 0, 0);
@@ -255,10 +326,17 @@ void pushMessage(CTetEngine *engine, const CTetMessageId id, const int32_t detai
 
 void spawnNextPiece(CTetEngine *engine, const CTetPiece piece) {
     activePiece_newPiece(&engine->active, piece);
+    if (engine->bufferedRotate != 0) {
+        piece_rotate(&engine->active.piece, engine->bufferedRotate);
+        pushMessage(engine, CT_MSG_BUFFERED_ROTATE, 0, 0);
+    }
     if (activePiece_collidesWith(&engine->active, (CTetPoint) {0})) {
         pushMessage(engine, CT_MSG_GAME_OVER, CT_GAME_OVER_TYPE_BLOCK_OUT, 0);
     }
     lockdown_onPieceSpawn(&engine->lockdown, &engine->active);
+    // Reset buffering
+    engine->bufferedRotate = 0;\
+    engine->bufferedHold = false;
 }
 
 void shiftActive(CTetEngine *engine, const ShiftDirection dir) {

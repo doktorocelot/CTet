@@ -489,6 +489,21 @@ CTetMessage ctEngine_nextMessage(CTetEngine *engine);
  */
 #define CT_MSG_CLEAR_LINE 0x7
 
+/**
+ * The lines that have cleared have collapsed. DetailA & DetailB is unused.
+ */
+#define CT_MSG_COLLAPSE 0x8
+
+/**
+ * A buffered rotation has executed. DetailA & DetailB is unused.
+ */
+#define CT_MSG_BUFFERED_ROTATE 0x9
+
+/**
+ * A buffered hold has executed. DetailA & DetailB is unused.
+ */
+#define CT_MSG_BUFFERED_HOLD 0xa
+
 /*******************
 End
 *******************/
