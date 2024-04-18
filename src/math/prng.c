@@ -1,4 +1,4 @@
-#include "prng.h"
+#include "math/math.h"
 
 static const uint64_t a = 1664525;
 static const uint64_t c = 1013904223;

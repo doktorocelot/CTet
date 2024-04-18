@@ -1,4 +1,4 @@
-#include "gravity.h"
+#include "game/behavior/behavior.h"
 
 int gravity_update(Gravity *gravity, ActivePiece *activePiece, const float deltaTime) {
     if (activePiece_collidesWith(activePiece, (CTetPoint) {0, -1})) {

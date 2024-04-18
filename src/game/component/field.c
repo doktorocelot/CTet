@@ -1,5 +1,5 @@
 #include <memory.h>
-#include "field.h"
+#include "game/component/component.h"
 
 static CTetBlock field_getBlockAt(const Field *field, CTetPoint coords);
 

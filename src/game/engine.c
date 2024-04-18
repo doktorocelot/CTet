@@ -1,14 +1,10 @@
 #include <malloc.h>
 #include <time.h>
 #include <ctet/ctet.h>
-#include "../math/prng.h"
 
-#include "component/active-piece.h"
-#include "behavior/lockdown.h"
-#include "component/hold-queue.h"
-#include "component/next-queue.h"
-#include "behavior/gravity.h"
-#include "behavior/autoshift.h"
+#include "game/component/component.h"
+#include "game/behavior/behavior.h"
+
 
 #include <math.h>
 #include <stdio.h>

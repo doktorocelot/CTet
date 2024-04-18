@@ -1,5 +1,5 @@
-#include "lockdown.h"
-#include "../../math/quick-math.h"
+#include "game/behavior/behavior.h"
+#include "math/math.h"
 
 static void lockdown_resetVars(Lockdown *lockdown);
 

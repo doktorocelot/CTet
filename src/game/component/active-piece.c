@@ -1,8 +1,6 @@
-#include "active-piece.h"
-
-#include "piece.h"
-#include "../data/piece-data.h"
-#include "wallkick.h"
+#include "game/component/component.h"
+#include "game/data/data.h"
+#include "game/behavior/behavior.h"
 
 void activePiece_newPiece(ActivePiece *active, const CTetPiece piece) {
     active->piece = piece;

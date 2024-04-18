@@ -1,7 +1,6 @@
 #include <memory.h>
-#include "next-queue.h"
-#include "piece.h"
-#include "../../math/prng.h"
+#include "game/component/component.h"
+#include "math/math.h"
 
 void nextQueue_genNewPieceAt(NextQueue *nextQueue, int i);
 

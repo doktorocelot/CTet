@@ -1,5 +1,5 @@
-#include "wallkick.h"
-#include "piece.h"
+#include "game/component/component.h"
+#include "game/behavior/behavior.h"
 
 // order:
 // starting orientation;

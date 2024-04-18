@@ -1,5 +1,4 @@
-#include "piece-data.h"
-
+#include "game/data/data.h"
 #include "ctet/ctet.h"
 
 static const CTetPoint PIECE_DATA[7][4][4] = {

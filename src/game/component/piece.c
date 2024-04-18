@@ -1,5 +1,5 @@
-#include "piece.h"
-#include "../data/piece-data.h"
+#include "game/component/component.h"
+#include "game/data/data.h"
 
 #define DEFAULT_ORIENTATION CTetOrientation_UP
 

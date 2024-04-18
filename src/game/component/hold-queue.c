@@ -1,4 +1,4 @@
-#include "hold-queue.h"
+#include "game/component/component.h"
 
 void holdQueue_reset(HoldQueue *holdQueue) {
     holdQueue->held = (CTetPiece) {.type = CTetPieceType_NONE};
